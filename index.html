@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>당신의 UV 케어 타입은? | 애프터썬케어 설문조사</title>
+    <meta name="description" content="5분 만에 알아보는 나의 자외선 케어 타입">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 시작 화면 -->
+        <div id="start-screen" class="screen active">
+            <div class="hero">
+                <h1>🌞 당신의 UV 케어 타입은?</h1>
+                <p class="subtitle">5분 만에 알아보는 나의 자외선 케어 타입</p>
+                <p class="description">
+                    MBTI처럼 재미있게!<br>
+                    13개의 질문으로 당신의 UV 케어 타입을 분석하고<br>
+                    맞춤형 애프터썬케어 제품을 추천해드립니다.
+                </p>
+                <button class="btn-primary" onclick="startSurvey()">시작하기</button>
+            </div>
+        </div>
+
+        <!-- 설문 화면 -->
+        <div id="survey-screen" class="screen">
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div id="progress" class="progress-fill"></div>
+                </div>
+                <div class="progress-text">
+                    <span id="current-question">1</span> / <span id="total-questions">13</span>
+                </div>
+            </div>
+
+            <div id="question-container" class="question-container">
+                <!-- 질문들이 동적으로 생성됩니다 -->
+            </div>
+
+            <div class="navigation">
+                <button id="prev-btn" class="btn-secondary" onclick="previousQuestion()" style="display: none;">이전</button>
+                <button id="next-btn" class="btn-secondary" onclick="nextQuestion()" style="display: none;">다음</button>
+            </div>
+        </div>
+
+        <!-- 로딩 화면 -->
+        <div id="loading-screen" class="screen">
+            <div class="loading-content">
+                <div class="spinner"></div>
+                <h2>당신의 UV 케어 타입을 분석중입니다...</h2>
+                <p id="loading-message">잠시만 기다려주세요</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
