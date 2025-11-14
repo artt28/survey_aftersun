@@ -229,13 +229,13 @@ function renderQuestion() {
                 const isChecked = answers[question.id] && answers[question.id][subQ.id] === option.value;
                 html += `
                     <div class="option ${isChecked ? 'selected' : ''}"
-                         onclick="selectSubOption('${question.id}', '${subQ.id}', '${option.value}', this)">
+                         onclick="selectSubOption(event, '${question.id}', '${subQ.id}', '${option.value}', this)">
                         <input type="radio"
                                id="${question.id}_${subQ.id}_${optIndex}"
                                name="${question.id}_${subQ.id}"
                                value="${option.value}"
                                ${isChecked ? 'checked' : ''}>
-                        <label for="${question.id}_${subQ.id}_${optIndex}">${option.label}</label>
+                        <label>${option.label}</label>
                     </div>
                 `;
             });
@@ -268,13 +268,13 @@ function renderQuestion() {
                     : answers[question.id] === option.value);
 
             html += `
-                <div class="option ${isChecked ? 'selected' : ''}" onclick="selectOption('${question.id}', '${option.value}', '${question.type}', this)">
+                <div class="option ${isChecked ? 'selected' : ''}" onclick="selectOption(event, '${question.id}', '${option.value}', '${question.type}', this)">
                     <input type="${inputType}"
                            id="${question.id}_${index}"
                            name="${question.id}"
                            value="${option.value}"
                            ${isChecked ? 'checked' : ''}>
-                    <label for="${question.id}_${index}">${option.label}</label>
+                    <label>${option.label}</label>
                 </div>
             `;
         });
@@ -292,37 +292,59 @@ function renderQuestion() {
 }
 
 // 옵션 선택
-function selectOption(questionId, value, type, element) {
+function selectOption(event, questionId, value, type, element) {
+    // 이벤트 전파 방지 (label, input의 기본 동작과 충돌 방지)
+    event.preventDefault();
+    event.stopPropagation();
+
     if (type === 'multiple') {
         if (!answers[questionId]) {
             answers[questionId] = [];
         }
 
         const index = answers[questionId].indexOf(value);
+        const checkbox = element.querySelector('input[type="checkbox"]');
+
         if (index > -1) {
             answers[questionId].splice(index, 1);
             element.classList.remove('selected');
+            if (checkbox) checkbox.checked = false;
         } else {
             answers[questionId].push(value);
             element.classList.add('selected');
+            if (checkbox) checkbox.checked = true;
         }
     } else {
+        // Single selection (radio)
         answers[questionId] = value;
 
         // 모든 옵션의 선택 해제
         element.parentElement.querySelectorAll('.option').forEach(opt => {
             opt.classList.remove('selected');
+            const radio = opt.querySelector('input[type="radio"]');
+            if (radio) radio.checked = false;
         });
 
         // 현재 옵션 선택
         element.classList.add('selected');
+        const radio = element.querySelector('input[type="radio"]');
+        if (radio) radio.checked = true;
+
+        // 단일 선택은 자동으로 다음 질문으로 (300ms 딜레이)
+        setTimeout(() => {
+            nextQuestion();
+        }, 300);
     }
 
     updateNavigation();
 }
 
 // 서브 옵션 선택 (Q10용)
-function selectSubOption(questionId, subId, value, element) {
+function selectSubOption(event, questionId, subId, value, element) {
+    // 이벤트 전파 방지
+    event.preventDefault();
+    event.stopPropagation();
+
     if (!answers[questionId]) {
         answers[questionId] = {};
     }
@@ -333,12 +355,27 @@ function selectSubOption(questionId, subId, value, element) {
     const parent = element.closest('.sub-options');
     parent.querySelectorAll('.option').forEach(opt => {
         opt.classList.remove('selected');
+        const radio = opt.querySelector('input[type="radio"]');
+        if (radio) radio.checked = false;
     });
 
     // 현재 옵션 선택
     element.classList.add('selected');
+    const radio = element.querySelector('input[type="radio"]');
+    if (radio) radio.checked = true;
 
     updateNavigation();
+
+    // Q10 (select_two)는 두 항목 모두 선택되면 자동으로 다음으로
+    const currentQuestion = surveyQuestions[currentQuestionIndex];
+    if (currentQuestion.type === 'select_two') {
+        const allAnswered = currentQuestion.subQuestions.every(sq => answers[questionId][sq.id]);
+        if (allAnswered) {
+            setTimeout(() => {
+                nextQuestion();
+            }, 300);
+        }
+    }
 }
 
 // 네비게이션 업데이트
@@ -346,7 +383,7 @@ function updateNavigation() {
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
 
-    // 이전 버튼
+    // 이전 버튼 - 첫 질문이 아니면 항상 표시
     prevBtn.style.display = currentQuestionIndex > 0 ? 'block' : 'none';
 
     // 다음 버튼
@@ -368,8 +405,15 @@ function updateNavigation() {
         hasAnswer = !!answers[currentQuestion.id];
     }
 
-    nextBtn.style.display = 'block';
-    nextBtn.disabled = !hasAnswer;
+    // 다중 선택과 select_two는 "다음" 버튼 표시
+    // 단일 선택은 자동 진행되므로 버튼 숨김
+    if (currentQuestion.type === 'multiple' || currentQuestion.type === 'select_two') {
+        nextBtn.style.display = 'block';
+        nextBtn.disabled = !hasAnswer;
+    } else {
+        // 단일 선택은 버튼 숨김 (자동 진행)
+        nextBtn.style.display = 'none';
+    }
 
     if (currentQuestionIndex === surveyQuestions.length - 1) {
         nextBtn.textContent = '결과 보기';

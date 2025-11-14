@@ -369,6 +369,16 @@ body {
     flex: 1;
 }
 
+/* 이전 버튼만 있을 때 (단일 선택 질문) */
+.navigation:has(#prev-btn:only-child) {
+    justify-content: center;
+}
+
+.navigation #prev-btn:only-child {
+    flex: 0 1 auto;
+    min-width: 200px;
+}
+
 /* 로딩 화면 */
 .loading-content {
     background: white;
@@ -544,6 +554,11 @@ body {
         font-size: 1.05em;
     }
 
+    /* 이전 버튼만 있을 때 중앙 정렬 */
+    .navigation #prev-btn:only-child {
+        min-width: 180px;
+    }
+
     /* 로딩 */
     .loading-content {
         padding: 60px 30px;
@@ -696,6 +711,12 @@ body {
         width: 100%;
         padding: 14px 25px;
         font-size: 1em;
+    }
+
+    /* 이전 버튼만 있을 때 */
+    .navigation #prev-btn:only-child {
+        width: 100%;
+        min-width: auto;
     }
 
     /* 로딩 */
