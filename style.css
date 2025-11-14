@@ -60,83 +60,87 @@ body {
 .hero {
     background: white;
     border-radius: 30px;
-    padding: 60px 40px;
+    padding: 40px 40px 50px;
     text-align: center;
     box-shadow: var(--shadow);
 }
 
 .hero h1 {
-    font-size: 2.5em;
+    font-size: 2.2em;
     color: var(--text-dark);
-    margin-bottom: 20px;
+    margin-bottom: 12px;
+    line-height: 1.3;
 }
 
 .hero .subtitle {
-    font-size: 1.5em;
+    font-size: 1.3em;
     color: var(--primary-color);
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     font-weight: 600;
 }
 
 .hero .description {
-    font-size: 1.1em;
+    font-size: 1em;
     color: #666;
-    line-height: 1.8;
-    margin-bottom: 40px;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    display: none; /* Hide on desktop for compactness */
 }
 
 /* 각성 유도 섹션 */
 .wake-up-section {
-    margin: 30px 0;
-    padding: 30px;
+    margin: 20px 0;
+    padding: 20px;
     background: linear-gradient(135deg, rgba(255, 107, 107, 0.05), rgba(78, 205, 196, 0.05));
-    border-radius: 20px;
+    border-radius: 15px;
     border: 2px dashed var(--primary-color);
 }
 
 .wake-up-title {
-    font-size: 1.4em;
+    font-size: 1.2em;
     color: var(--primary-color);
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     text-align: center;
 }
 
 .fact-cards {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    margin-bottom: 20px;
+    gap: 10px;
+    margin-bottom: 15px;
 }
 
 .fact-card {
     background: white;
-    padding: 20px;
-    border-radius: 15px;
+    padding: 15px 12px;
+    border-radius: 12px;
     text-align: center;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     transition: transform 0.3s ease;
 }
 
 .fact-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .fact-icon {
-    font-size: 2.5em;
-    margin-bottom: 10px;
+    font-size: 2em;
+    margin-bottom: 8px;
 }
 
 .fact-card p {
-    font-size: 0.9em;
+    font-size: 0.85em;
     color: #555;
-    line-height: 1.5;
+    line-height: 1.4;
     margin: 0;
 }
 
 .fact-card strong {
     color: var(--text-dark);
-    font-size: 1.05em;
+    font-size: 1em;
+    display: block;
+    margin-bottom: 3px;
 }
 
 .fact-card .highlight {
@@ -145,10 +149,10 @@ body {
 }
 
 .cta-text {
-    font-size: 1.15em;
+    font-size: 1em;
     color: #555;
-    line-height: 1.7;
-    margin: 30px 0 25px;
+    line-height: 1.5;
+    margin: 15px 0 20px;
 }
 
 .cta-text strong {
@@ -158,10 +162,10 @@ body {
 
 .btn-subtext {
     display: block;
-    font-size: 0.75em;
+    font-size: 0.7em;
     font-weight: 400;
-    opacity: 0.9;
-    margin-top: 5px;
+    opacity: 0.85;
+    margin-top: 3px;
 }
 
 /* 버튼 */
@@ -425,57 +429,64 @@ body {
     }
 
     .hero {
-        padding: 35px 25px;
+        padding: 30px 22px 40px;
         border-radius: 20px;
     }
 
     .hero h1 {
-        font-size: 2em;
+        font-size: 1.8em;
         line-height: 1.3;
+        margin-bottom: 10px;
     }
 
     .hero .subtitle {
-        font-size: 1.2em;
-        margin-bottom: 25px;
+        font-size: 1.15em;
+        margin-bottom: 18px;
     }
 
     .hero .description {
-        font-size: 1em;
-        margin-bottom: 35px;
+        display: none; /* Keep hidden for compactness */
     }
 
     /* 각성 섹션 */
     .wake-up-section {
-        padding: 25px 20px;
-        margin: 25px 0;
+        padding: 18px 15px;
+        margin: 18px 0;
     }
 
     .wake-up-title {
-        font-size: 1.2em;
-        margin-bottom: 15px;
+        font-size: 1.1em;
+        margin-bottom: 12px;
     }
 
     .fact-cards {
-        grid-template-columns: 1fr;
-        gap: 12px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
     }
 
     .fact-card {
-        padding: 18px;
+        padding: 12px 10px;
     }
 
     .fact-icon {
-        font-size: 2.2em;
-        margin-bottom: 8px;
+        font-size: 1.8em;
+        margin-bottom: 6px;
     }
 
     .fact-card p {
-        font-size: 0.95em;
+        font-size: 0.8em;
+        line-height: 1.3;
+    }
+
+    .fact-card strong {
+        font-size: 0.9em;
+        margin-bottom: 2px;
     }
 
     .cta-text {
-        font-size: 1.05em;
-        margin: 25px 0 20px;
+        font-size: 0.95em;
+        margin: 12px 0 18px;
+        line-height: 1.4;
     }
 
     /* 버튼 */
@@ -580,52 +591,63 @@ body {
     }
 
     .hero {
-        padding: 30px 20px;
+        padding: 25px 18px 35px;
         border-radius: 18px;
     }
 
     .hero h1 {
-        font-size: 1.75em;
+        font-size: 1.6em;
         line-height: 1.3;
-        margin-bottom: 15px;
+        margin-bottom: 8px;
     }
 
     .hero .subtitle {
-        font-size: 1.1em;
-        margin-bottom: 20px;
+        font-size: 1.05em;
+        margin-bottom: 15px;
     }
 
     .hero .description {
-        font-size: 0.95em;
-        margin-bottom: 30px;
+        display: none; /* Keep hidden */
     }
 
     /* 각성 섹션 - 매우 작은 화면 */
     .wake-up-section {
-        padding: 20px 15px;
-        margin: 20px 0;
-        border-radius: 15px;
+        padding: 15px 12px;
+        margin: 15px 0;
+        border-radius: 12px;
     }
 
     .wake-up-title {
-        font-size: 1.1em;
+        font-size: 1em;
+        margin-bottom: 10px;
+    }
+
+    .fact-cards {
+        gap: 6px;
     }
 
     .fact-card {
-        padding: 15px;
+        padding: 10px 8px;
     }
 
     .fact-icon {
-        font-size: 2em;
+        font-size: 1.6em;
+        margin-bottom: 4px;
     }
 
     .fact-card p {
-        font-size: 0.9em;
+        font-size: 0.75em;
+        line-height: 1.3;
+    }
+
+    .fact-card strong {
+        font-size: 0.85em;
     }
 
     .cta-text {
-        font-size: 1em;
-        margin: 20px 0 18px;
+        font-size: 0.9em;
+        margin: 10px 0 15px;
+        line-height: 1.4;
     }
 
     /* 버튼 */
