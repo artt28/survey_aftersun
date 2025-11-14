@@ -404,39 +404,158 @@ body {
     font-size: 1.1em;
 }
 
-/* 반응형 */
+/* 반응형 - 개선된 모바일 UI */
 @media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+
+    .container {
+        max-width: 100%;
+    }
+
     .hero {
-        padding: 40px 30px;
+        padding: 35px 25px;
+        border-radius: 20px;
     }
 
     .hero h1 {
         font-size: 2em;
+        line-height: 1.3;
     }
 
     .hero .subtitle {
         font-size: 1.2em;
+        margin-bottom: 25px;
     }
 
     .hero .description {
         font-size: 1em;
+        margin-bottom: 35px;
     }
 
-    .question-container {
-        padding: 30px 25px;
+    /* 각성 섹션 */
+    .wake-up-section {
+        padding: 25px 20px;
+        margin: 25px 0;
     }
 
-    .question-card h2 {
-        font-size: 1.4em;
+    .wake-up-title {
+        font-size: 1.2em;
+        margin-bottom: 15px;
     }
 
-    .option label {
+    .fact-cards {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .fact-card {
+        padding: 18px;
+    }
+
+    .fact-icon {
+        font-size: 2.2em;
+        margin-bottom: 8px;
+    }
+
+    .fact-card p {
+        font-size: 0.95em;
+    }
+
+    .cta-text {
+        font-size: 1.05em;
+        margin: 25px 0 20px;
+    }
+
+    /* 버튼 */
+    .btn-primary {
+        padding: 16px 45px;
+        font-size: 1.15em;
+        width: 100%;
+    }
+
+    .btn-subtext {
+        font-size: 0.8em;
+    }
+
+    /* 질문 */
+    .progress-container {
+        padding: 18px;
+        margin-bottom: 20px;
+        border-radius: 15px;
+    }
+
+    .progress-text {
         font-size: 1em;
     }
 
-    .btn-primary {
-        padding: 15px 40px;
+    .question-container {
+        padding: 30px 22px;
+        border-radius: 20px;
+        min-height: 350px;
+    }
+
+    .question-card h2 {
+        font-size: 1.5em;
+        line-height: 1.4;
+    }
+
+    .question-number {
+        font-size: 0.85em;
+    }
+
+    .question-description {
+        font-size: 0.95em;
+        margin-bottom: 25px;
+    }
+
+    .sub-question-title {
         font-size: 1.1em;
+        margin-bottom: 12px;
+    }
+
+    .options {
+        gap: 12px;
+    }
+
+    .option {
+        padding: 18px 20px;
+        border-radius: 15px;
+    }
+
+    .option label {
+        font-size: 1.05em;
+        line-height: 1.5;
+    }
+
+    /* 터치 타겟 크기 증가 */
+    .option {
+        min-height: 56px;
+    }
+
+    .navigation {
+        gap: 12px;
+        margin-top: 20px;
+    }
+
+    .navigation button {
+        padding: 14px 30px;
+        font-size: 1.05em;
+    }
+
+    /* 로딩 */
+    .loading-content {
+        padding: 60px 30px;
+        border-radius: 20px;
+    }
+
+    .loading-content h2 {
+        font-size: 1.6em;
+    }
+
+    .loading-content p {
+        font-size: 1em;
     }
 }
 
@@ -447,17 +566,156 @@ body {
 
     .hero {
         padding: 30px 20px;
+        border-radius: 18px;
     }
 
     .hero h1 {
-        font-size: 1.6em;
+        font-size: 1.75em;
+        line-height: 1.3;
+        margin-bottom: 15px;
+    }
+
+    .hero .subtitle {
+        font-size: 1.1em;
+        margin-bottom: 20px;
+    }
+
+    .hero .description {
+        font-size: 0.95em;
+        margin-bottom: 30px;
+    }
+
+    /* 각성 섹션 - 매우 작은 화면 */
+    .wake-up-section {
+        padding: 20px 15px;
+        margin: 20px 0;
+        border-radius: 15px;
+    }
+
+    .wake-up-title {
+        font-size: 1.1em;
+    }
+
+    .fact-card {
+        padding: 15px;
+    }
+
+    .fact-icon {
+        font-size: 2em;
+    }
+
+    .fact-card p {
+        font-size: 0.9em;
+    }
+
+    .cta-text {
+        font-size: 1em;
+        margin: 20px 0 18px;
+    }
+
+    /* 버튼 */
+    .btn-primary {
+        padding: 15px 35px;
+        font-size: 1.1em;
+        border-radius: 40px;
+    }
+
+    .btn-secondary {
+        padding: 12px 25px;
+        font-size: 0.95em;
+        border-radius: 20px;
+    }
+
+    /* 질문 */
+    .progress-container {
+        padding: 15px;
+        border-radius: 12px;
+    }
+
+    .progress-bar {
+        height: 10px;
+    }
+
+    .progress-text {
+        font-size: 0.95em;
     }
 
     .question-container {
-        padding: 25px 20px;
+        padding: 25px 18px;
+        border-radius: 18px;
+        min-height: 300px;
+    }
+
+    .question-card h2 {
+        font-size: 1.3em;
+        line-height: 1.4;
+        margin-bottom: 12px;
+    }
+
+    .question-number {
+        font-size: 0.8em;
+    }
+
+    .question-description {
+        font-size: 0.9em;
+        margin-bottom: 20px;
+    }
+
+    .sub-question-title {
+        font-size: 1em;
+        padding-bottom: 8px;
+    }
+
+    .options {
+        gap: 10px;
+    }
+
+    .option {
+        padding: 16px 18px;
+        border-radius: 12px;
+        border-width: 2px;
+    }
+
+    .option label {
+        font-size: 1em;
+        line-height: 1.4;
+    }
+
+    .option.selected::after {
+        font-size: 1.3em;
+        right: 18px;
     }
 
     .navigation {
         flex-direction: column;
+        gap: 10px;
+        margin-top: 18px;
+    }
+
+    .navigation button {
+        width: 100%;
+        padding: 14px 25px;
+        font-size: 1em;
+    }
+
+    /* 로딩 */
+    .loading-content {
+        padding: 50px 25px;
+    }
+
+    .spinner {
+        width: 50px;
+        height: 50px;
+        margin: 0 auto 25px;
+        border-width: 5px;
+    }
+
+    .loading-content h2 {
+        font-size: 1.4em;
+        margin-bottom: 12px;
+    }
+
+    .loading-content p {
+        font-size: 0.95em;
     }
 }

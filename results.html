@@ -287,43 +287,366 @@
         }
 
         @media (max-width: 768px) {
+            .results-container {
+                max-width: 100%;
+            }
+
             .result-card {
-                padding: 30px 25px;
+                padding: 35px 25px;
+                border-radius: 25px;
+                margin-bottom: 25px;
+            }
+
+            .type-icon {
+                font-size: 3.5em;
+                margin-bottom: 12px;
             }
 
             .type-name {
-                font-size: 2em;
+                font-size: 2.1em;
+                line-height: 1.3;
+                margin-bottom: 8px;
+            }
+
+            .type-tagline {
+                font-size: 1.15em;
+                margin-bottom: 18px;
+            }
+
+            .type-description {
+                font-size: 1.05em;
+                line-height: 1.7;
+                margin-bottom: 18px;
+            }
+
+            .uv-score-badge {
+                padding: 10px 25px;
+                font-size: 1.1em;
+                border-radius: 40px;
+            }
+
+            .section {
+                margin: 35px 0;
+            }
+
+            .section-title {
+                font-size: 1.6em;
+                margin-bottom: 18px;
             }
 
             .routine-grid {
                 grid-template-columns: 1fr;
+                gap: 18px;
+            }
+
+            .routine-card {
+                padding: 22px;
+                border-radius: 18px;
+            }
+
+            .routine-card h4 {
+                font-size: 1.2em;
+                margin-bottom: 12px;
+            }
+
+            .routine-card li {
+                padding: 7px 0;
+                padding-left: 22px;
+                font-size: 0.95em;
             }
 
             .problems-list {
                 grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .problem-item {
+                padding: 18px;
+                border-radius: 12px;
+                gap: 12px;
+            }
+
+            .problem-emoji {
+                font-size: 1.8em;
+            }
+
+            .products-section {
+                padding: 25px;
+                border-radius: 18px;
+                margin: 25px 0;
+            }
+
+            .products-category {
+                margin: 22px 0;
+            }
+
+            .products-category h4 {
+                font-size: 1.15em;
+                margin-bottom: 12px;
+            }
+
+            .products-category li {
+                padding: 9px 0;
+                padding-left: 28px;
+                font-size: 0.95em;
+                line-height: 1.5;
+            }
+
+            .myth-item {
+                padding: 18px;
+                border-radius: 12px;
+                margin: 12px 0;
+            }
+
+            .myth-wrong, .myth-right {
+                font-size: 0.95em;
+                line-height: 1.5;
+            }
+
+            .tip-item {
+                padding: 14px 18px;
+                border-radius: 10px;
+                margin: 9px 0;
+                font-size: 0.95em;
+                line-height: 1.6;
+            }
+
+            .share-section {
+                margin-top: 35px;
+                padding-top: 25px;
+            }
+
+            .share-section h3 {
+                font-size: 1.3em;
+                margin-bottom: 18px;
             }
 
             .share-buttons {
                 flex-direction: column;
+                gap: 12px;
             }
 
             .share-btn {
                 width: 100%;
                 justify-content: center;
+                padding: 14px 25px;
+                font-size: 1.05em;
+                border-radius: 30px;
+            }
+
+            .action-buttons {
+                margin-top: 18px;
+                gap: 12px;
+            }
+
+            .action-buttons button {
+                width: 100%;
+                padding: 12px 25px;
+                font-size: 1em;
+            }
+
+            /* 이메일 구독 섹션 */
+            #email-input {
+                min-width: 100% !important;
+                margin-bottom: 10px;
+            }
+
+            .result-card > div[style*="display: flex"] {
+                flex-direction: column !important;
             }
         }
 
         @media (max-width: 480px) {
+            .result-card {
+                padding: 28px 20px;
+                border-radius: 20px;
+            }
+
             .type-icon {
                 font-size: 3em;
             }
 
             .type-name {
-                font-size: 1.6em;
+                font-size: 1.8em;
+                line-height: 1.3;
+            }
+
+            .type-tagline {
+                font-size: 1.05em;
+                margin-bottom: 15px;
+            }
+
+            .type-description {
+                font-size: 1em;
+                line-height: 1.6;
+            }
+
+            .uv-score-badge {
+                padding: 10px 22px;
+                font-size: 1.05em;
+            }
+
+            .section {
+                margin: 30px 0;
             }
 
             .section-title {
                 font-size: 1.4em;
+                margin-bottom: 15px;
+                gap: 8px;
+            }
+
+            .routine-grid {
+                gap: 15px;
+            }
+
+            .routine-card {
+                padding: 20px;
+                border-radius: 15px;
+            }
+
+            .routine-card h4 {
+                font-size: 1.1em;
+                margin-bottom: 10px;
+            }
+
+            .routine-card li {
+                padding: 6px 0;
+                padding-left: 20px;
+                font-size: 0.9em;
+                line-height: 1.4;
+            }
+
+            .problems-list {
+                gap: 10px;
+            }
+
+            .problem-item {
+                padding: 15px;
+                border-radius: 12px;
+                gap: 10px;
+            }
+
+            .problem-emoji {
+                font-size: 1.6em;
+            }
+
+            .problem-item span {
+                font-size: 0.9em;
+                line-height: 1.4;
+            }
+
+            .products-section {
+                padding: 20px;
+                border-radius: 15px;
+                margin: 20px 0;
+            }
+
+            .products-category {
+                margin: 20px 0;
+            }
+
+            .products-category h4 {
+                font-size: 1.05em;
+                margin-bottom: 10px;
+            }
+
+            .products-category li {
+                padding: 8px 0;
+                padding-left: 25px;
+                font-size: 0.9em;
+                line-height: 1.4;
+            }
+
+            .products-category li::before {
+                font-size: 1.2em;
+            }
+
+            .myth-item {
+                padding: 15px;
+                border-radius: 12px;
+                margin: 10px 0;
+            }
+
+            .myth-wrong, .myth-right {
+                font-size: 0.9em;
+                line-height: 1.4;
+            }
+
+            .myth-wrong {
+                margin-bottom: 6px;
+            }
+
+            .tip-item {
+                padding: 12px 15px;
+                border-radius: 8px;
+                margin: 8px 0;
+                font-size: 0.9em;
+                line-height: 1.5;
+            }
+
+            .share-section {
+                margin-top: 30px;
+                padding-top: 20px;
+            }
+
+            .share-section h3 {
+                font-size: 1.2em;
+                margin-bottom: 15px;
+            }
+
+            .share-section p {
+                font-size: 0.9em;
+                margin-bottom: 18px !important;
+            }
+
+            .share-buttons {
+                gap: 10px;
+            }
+
+            .share-btn {
+                padding: 13px 22px;
+                font-size: 1em;
+                border-radius: 25px;
+            }
+
+            .action-buttons {
+                margin-top: 15px;
+                gap: 10px;
+            }
+
+            .action-buttons button {
+                padding: 12px 22px;
+                font-size: 0.95em;
+            }
+
+            /* 이메일 구독 섹션 - 모바일 최적화 */
+            .result-card h2 {
+                font-size: 1.3em !important;
+                margin-bottom: 15px !important;
+            }
+
+            .result-card p {
+                font-size: 0.9em !important;
+                line-height: 1.6 !important;
+                margin-bottom: 15px !important;
+            }
+
+            #email-input {
+                padding: 13px 18px !important;
+                font-size: 0.95em !important;
+                border-radius: 20px !important;
+            }
+
+            button[onclick="subscribeEmail()"] {
+                width: 100%;
+                padding: 13px 30px !important;
+                font-size: 1em !important;
+            }
+
+            #subscribe-message {
+                margin-top: 12px !important;
+                font-size: 0.9em !important;
             }
         }
     </style>
