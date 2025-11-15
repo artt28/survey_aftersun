@@ -12,7 +12,7 @@
 2. **시트 이름을 정확히 "Responses"로 변경** (대소문자 구분!)
 3. 첫 번째 행(헤더)은 비워두거나 다음과 같이 입력:
    ```
-   타임스탬프 | UV타입 | 점수 | Q1 | Q2 | Q3 | Q4 | Q5 | Q6 | Q7 | Q8 | Q9 | Q10 | 액션 | 이메일 | User Agent
+   타임스탬프 | UV타입 | 점수 | Q1 | Q2 | Q3 | Q4 | Q5 | Q6 | Q7 | Q8 | Q9 | Q10 | Q11 | Q12 | Q13 | Q14 | Q15_이메일 | User Agent
    ```
 
 ### 2. Apps Script 코드 복사
@@ -41,7 +41,7 @@ function doPost(e) {
       // 헤더 추가
       sheet.appendRow([
         '타임스탬프', 'UV타입', '점수', 'Q1', 'Q2', 'Q3', 'Q4', 'Q5',
-        'Q6', 'Q7', 'Q8', 'Q9', 'Q10', '액션', '이메일', 'User Agent'
+        'Q6', 'Q7', 'Q8', 'Q9', 'Q10', 'Q11', 'Q12', 'Q13', 'Q14', 'Q15_이메일', 'User Agent'
       ]);
     }
 
@@ -71,8 +71,11 @@ function doPost(e) {
       formatAnswer(data.q8),
       formatAnswer(data.q9),
       formatAnswer(data.q10),
-      data.action || 'survey',
-      data.email || '',
+      formatAnswer(data.q11),
+      formatAnswer(data.q12),
+      formatAnswer(data.q13),
+      formatAnswer(data.q14),
+      data.q15 || '',  // 이메일 (선택사항)
       data.userAgent || ''
     ];
 
@@ -153,20 +156,23 @@ function testPost() {
 
   const testData = {
     timestamp: new Date().toISOString(),
-    uvType: 'fighter',
+    uvType: 'desert_fox',
     score: 85,
-    q1: ['heat', 'red'],
-    q2: 'know_care',
-    q3: 'yes_care',
-    q4: 'everyday',
-    q5: ['mask', 'mist'],
-    q6: 'often',
-    q7: '30_to_60',
-    q8: 'light_outdoor',
-    q9: 'very_need',
-    q10: 'ingredients',
-    action: 'survey',
-    email: 'test@example.com',
+    q1: ['heat', 'redness'],
+    q2: 'always',
+    q3: 'well_know',
+    q4: 'always',
+    q5: 'often',
+    q6: 'rarely',
+    q7: 'lack_product',
+    q8: '10_plus',
+    q9: 'outdoor',
+    q10: 'all_select',
+    q11: 'under_15',
+    q12: 'important',
+    q13: 'late_20s',
+    q14: 'sensitive',
+    q15: 'test@example.com',  // 이메일 (선택사항)
     userAgent: 'Test User Agent'
   };
 
@@ -195,7 +201,7 @@ function resetSheet() {
   sheet = spreadsheet.insertSheet('Responses');
   sheet.appendRow([
     '타임스탬프', 'UV타입', '점수', 'Q1', 'Q2', 'Q3', 'Q4', 'Q5',
-    'Q6', 'Q7', 'Q8', 'Q9', 'Q10', '액션', '이메일', 'User Agent'
+    'Q6', 'Q7', 'Q8', 'Q9', 'Q10', 'Q11', 'Q12', 'Q13', 'Q14', 'Q15_이메일', 'User Agent'
   ]);
 
   Logger.log('시트가 초기화되었습니다.');

@@ -667,6 +667,13 @@
                     </div>
                 </div>
 
+                <!-- 다시 테스트하기 버튼 (최상단) -->
+                <div style="text-align: center; margin: 20px 0;">
+                    <button class="btn-secondary" onclick="location.href='index.html'" style="padding: 12px 30px; font-size: 1.1em; border-radius: 25px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); transition: all 0.3s;">
+                        🔄 다시 테스트하기
+                    </button>
+                </div>
+
                 <p class="type-description" id="type-description">Loading...</p>
                 <div class="uv-score-badge">
                     UV 케어 점수: <span id="uv-score">85</span>점
@@ -733,46 +740,14 @@
                 <p style="color: #666; margin-bottom: 20px;">
                     친구도 자신의 UV 케어 타입을 알아볼 수 있어요!
                 </p>
-                <div class="share-buttons">
-                    <button class="share-btn kakao" onclick="shareKakao()">
-                        💬 카카오톡 공유
-                    </button>
-                    <button class="share-btn twitter" onclick="shareTwitter()">
-                        🐦 트위터
-                    </button>
-                    <button class="share-btn facebook" onclick="shareFacebook()">
-                        📘 페이스북
-                    </button>
-                    <button class="share-btn copy" onclick="copyLink()">
-                        🔗 링크 복사
-                    </button>
-                </div>
-                <div class="action-buttons">
-                    <button class="btn-secondary" onclick="location.href='index.html'">
-                        다시 테스트하기
+                <div class="share-buttons" style="text-align: center;">
+                    <button class="share-btn kakao" onclick="shareKakao()" style="padding: 15px 40px; font-size: 1.1em; border-radius: 12px; background: #FEE500; color: #000; border: none; cursor: pointer; box-shadow: 0 4px 12px rgba(254, 229, 0, 0.4); transition: all 0.3s;">
+                        💬 카카오톡 공유하기
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- 추가 정보 카드 -->
-        <div class="result-card">
-            <h2 style="margin-bottom: 20px; color: var(--text-dark);">
-                🌟 제품 출시 알림 받기
-            </h2>
-            <p style="color: #666; margin-bottom: 20px; line-height: 1.8;">
-                애프터썬케어 미스트 제품 출시 시 가장 먼저 소식을 받아보세요.<br>
-                얼리버드 할인 혜택도 준비되어 있습니다!
-            </p>
-            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <input type="email" id="email-input" placeholder="이메일 주소를 입력해주세요"
-                    style="flex: 1; min-width: 250px; padding: 15px 20px; border: 2px solid #E0E0E0; border-radius: 25px; font-size: 1em;">
-                <button class="btn-primary" onclick="subscribeEmail()" style="padding: 15px 40px;">
-                    알림 신청
-                </button>
-            </div>
-            <p id="subscribe-message" style="margin-top: 15px; color: var(--primary-color); font-weight: 600;"></p>
-        </div>
     </div>
 
     <script src="config.js"></script>

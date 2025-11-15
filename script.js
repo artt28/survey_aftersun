@@ -263,6 +263,18 @@ const surveyQuestions = [
             { value: 'acne', label: '여드름 피부', weight: 0 },
             { value: 'unknown', label: '잘 모르겠다', weight: 0 }
         ]
+    },
+
+    // Q15. 이메일 (선택사항)
+    {
+        id: 'q15',
+        section: 'contact',
+        question: '📧 결과를 이메일로 받고 싶으신가요?',
+        description: '선택사항입니다. 나중에 맞춤형 UV 케어 팁을 보내드릴게요!',
+        type: 'email',
+        category: 'email',
+        optional: true,
+        placeholder: 'example@email.com'
     }
 ];
 
@@ -365,24 +377,42 @@ function renderQuestion() {
             <div class="options">
     `;
 
-    question.options.forEach((option, index) => {
-        const inputType = question.type === 'multiple' ? 'checkbox' : 'radio';
-        const isChecked = answers[question.id] &&
-            (question.type === 'multiple'
-                ? answers[question.id].includes(option.value)
-                : answers[question.id] === option.value);
-
+    // 이메일 타입 질문
+    if (question.type === 'email') {
         html += `
-            <div class="option ${isChecked ? 'selected' : ''}" onclick="selectOption(event, '${question.id}', '${option.value}', '${question.type}', this)">
-                <input type="${inputType}"
-                       id="${question.id}_${index}"
-                       name="${question.id}"
-                       value="${option.value}"
-                       ${isChecked ? 'checked' : ''}>
-                <label>${option.label}</label>
+            <div style="text-align: center; padding: 20px 0;">
+                <input type="email"
+                       id="${question.id}_input"
+                       placeholder="${question.placeholder || 'example@email.com'}"
+                       value="${answers[question.id] || ''}"
+                       style="width: 100%; max-width: 400px; padding: 15px; font-size: 1.1em; border: 2px solid #ddd; border-radius: 10px; text-align: center;"
+                       oninput="handleEmailInput('${question.id}', this.value)">
+                <p style="margin-top: 15px; color: #666; font-size: 0.9em;">
+                    ${question.optional ? '선택사항입니다. 건너뛰려면 "다음" 버튼을 클릭하세요.' : ''}
+                </p>
             </div>
         `;
-    });
+    } else {
+        // 기존 옵션 타입 질문
+        question.options.forEach((option, index) => {
+            const inputType = question.type === 'multiple' ? 'checkbox' : 'radio';
+            const isChecked = answers[question.id] &&
+                (question.type === 'multiple'
+                    ? answers[question.id].includes(option.value)
+                    : answers[question.id] === option.value);
+
+            html += `
+                <div class="option ${isChecked ? 'selected' : ''}" onclick="selectOption(event, '${question.id}', '${option.value}', '${question.type}', this)">
+                    <input type="${inputType}"
+                           id="${question.id}_${index}"
+                           name="${question.id}"
+                           value="${option.value}"
+                           ${isChecked ? 'checked' : ''}>
+                    <label>${option.label}</label>
+                </div>
+            `;
+        });
+    }
 
     html += `
             </div>
@@ -440,6 +470,11 @@ function selectOption(event, questionId, value, type, element) {
     }
 
     updateNavigation();
+}
+
+// 이메일 입력 처리
+function handleEmailInput(questionId, value) {
+    answers[questionId] = value;
 }
 
 // 네비게이션 업데이트 (통일된 방식 - 모두 "다음" 버튼)
@@ -604,32 +639,32 @@ function calculateUVType() {
     else if (scores.exposure >= 5) exposureLevel = 'medium';
     else exposureLevel = 'low';
 
-    // 타입 매핑 (6개 주요 타입 + 2개 특수 타입)
-    let type = 'beginner';  // 기본값
+    // 타입 매핑 (9개 동물 캐릭터 타입)
+    let type = 'baby_chick';  // 기본값: UV 새싹
 
     if (sensitivityLevel === 'high') {
         if (careType === 'prevention') {
-            type = exposureLevel === 'high' ? 'uv_conscious' : 'suncare_master';
+            type = exposureLevel === 'high' ? 'desert_fox' : 'shadow_panda';
         } else if (careType === 'aftercare') {
-            type = exposureLevel === 'high' ? 'cooling_pro' : 'sensitive_carer';
+            type = exposureLevel === 'high' ? 'cooling_dolphin' : 'glass_swan';
         } else {
-            type = 'sensitive_beginner';
+            type = 'baby_chick';
         }
     } else if (sensitivityLevel === 'medium') {
         if (careType === 'prevention') {
-            type = 'smart_carer';
+            type = 'balance_raccoon';
         } else if (careType === 'aftercare') {
-            type = 'active_guarder';
+            type = 'action_cheetah';
         } else {
-            type = 'beginner';
+            type = 'baby_chick';
         }
     } else {  // low sensitivity
         if (careType === 'unconcerned') {
-            type = exposureLevel === 'high' ? 'free_spirit' : 'urban_life';
+            type = exposureLevel === 'high' ? 'sun_eagle' : 'indoor_cat';
         } else if (careType === 'prevention') {
-            type = 'active_guarder';
+            type = 'action_cheetah';
         } else {
-            type = 'urban_life';
+            type = 'indoor_cat';
         }
     }
 
