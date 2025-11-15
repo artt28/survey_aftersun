@@ -724,21 +724,19 @@ body {
     }
 
     .navigation {
-        flex-direction: column;
+        flex-direction: row;
         gap: 10px;
         margin-top: 18px;
     }
 
     .navigation button {
-        width: 100%;
-        padding: 14px 25px;
+        padding: 14px 20px;
         font-size: 1em;
     }
 
     /* 이전 버튼만 있을 때 */
     .navigation #prev-btn:only-child {
-        width: 100%;
-        min-width: auto;
+        min-width: 140px;
     }
 
     /* 로딩 */

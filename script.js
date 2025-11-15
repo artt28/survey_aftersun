@@ -170,7 +170,8 @@ const surveyQuestions = [
             { value: 'under_30', label: '30분 이하 (출퇴근·점심 이동 정도)', weight: 1 },
             { value: '30_to_60', label: '30분–1시간', weight: 2 },
             { value: 'over_60', label: '1시간 이상', weight: 3 },
-            { value: 'none', label: '거의 없음', weight: 0 }
+            { value: 'none', label: '거의 없음', weight: 0 },
+            { value: 'other', label: '기타', weight: 1, hasTextInput: true }
         ]
     },
 
@@ -399,10 +400,11 @@ function renderQuestion() {
             const isChecked = answers[question.id] &&
                 (question.type === 'multiple'
                     ? answers[question.id].includes(option.value)
-                    : answers[question.id] === option.value);
+                    : answers[question.id] === option.value ||
+                      (typeof answers[question.id] === 'string' && answers[question.id].startsWith('other:')));
 
             html += `
-                <div class="option ${isChecked ? 'selected' : ''}" onclick="selectOption(event, '${question.id}', '${option.value}', '${question.type}', this)">
+                <div class="option ${isChecked ? 'selected' : ''}" onclick="selectOption(event, '${question.id}', '${option.value}', '${question.type}', this, ${option.hasTextInput || false})">
                     <input type="${inputType}"
                            id="${question.id}_${index}"
                            name="${question.id}"
@@ -411,6 +413,25 @@ function renderQuestion() {
                     <label>${option.label}</label>
                 </div>
             `;
+
+            // 텍스트 입력이 필요한 옵션인 경우
+            if (option.hasTextInput) {
+                const otherText = (typeof answers[question.id] === 'string' && answers[question.id].startsWith('other:'))
+                    ? answers[question.id].replace('other:', '')
+                    : '';
+                const showInput = answers[question.id] === 'other' || (typeof answers[question.id] === 'string' && answers[question.id].startsWith('other:'));
+
+                html += `
+                    <div id="${question.id}_other_input" style="display: ${showInput ? 'block' : 'none'}; margin: 10px 0 20px 0; padding: 0 20px;">
+                        <input type="text"
+                               id="${question.id}_other_text"
+                               placeholder="직접 입력해주세요"
+                               value="${otherText}"
+                               style="width: 100%; padding: 12px; font-size: 1em; border: 2px solid #ddd; border-radius: 8px;"
+                               oninput="handleOtherInput('${question.id}', this.value)">
+                    </div>
+                `;
+            }
         });
     }
 
@@ -431,7 +452,7 @@ function renderQuestion() {
 }
 
 // 옵션 선택
-function selectOption(event, questionId, value, type, element) {
+function selectOption(event, questionId, value, type, element, hasTextInput = false) {
     // 이벤트 전파 방지
     event.preventDefault();
     event.stopPropagation();
@@ -467,6 +488,22 @@ function selectOption(event, questionId, value, type, element) {
         element.classList.add('selected');
         const radio = element.querySelector('input[type="radio"]');
         if (radio) radio.checked = true;
+
+        // 텍스트 입력 표시/숨김
+        if (hasTextInput) {
+            const otherInput = document.getElementById(`${questionId}_other_input`);
+            const otherText = document.getElementById(`${questionId}_other_text`);
+            if (otherInput) {
+                otherInput.style.display = 'block';
+                if (otherText) otherText.focus();
+            }
+        } else {
+            // 다른 옵션 선택 시 텍스트 입력 숨김
+            const otherInput = document.getElementById(`${questionId}_other_input`);
+            if (otherInput) {
+                otherInput.style.display = 'none';
+            }
+        }
     }
 
     updateNavigation();
@@ -475,6 +512,16 @@ function selectOption(event, questionId, value, type, element) {
 // 이메일 입력 처리
 function handleEmailInput(questionId, value) {
     answers[questionId] = value;
+}
+
+// 기타 옵션 텍스트 입력 처리
+function handleOtherInput(questionId, value) {
+    if (value.trim()) {
+        answers[questionId] = 'other:' + value;
+    } else {
+        answers[questionId] = 'other';
+    }
+    updateNavigation();
 }
 
 // 네비게이션 업데이트 (통일된 방식 - 모두 "다음" 버튼)
@@ -494,7 +541,13 @@ function updateNavigation() {
         hasAnswer = answers[currentQuestion.id].length > 0;
     } else {
         // single: 값이 있는지 확인
-        hasAnswer = !!answers[currentQuestion.id];
+        const answer = answers[currentQuestion.id];
+        hasAnswer = !!answer;
+
+        // "other" 옵션인 경우, 텍스트 입력이 있어야 함
+        if (answer === 'other') {
+            hasAnswer = false;  // 텍스트 입력 없으면 진행 불가
+        }
     }
 
     nextBtn.style.display = 'block';
@@ -503,9 +556,9 @@ function updateNavigation() {
     // 마지막 질문인지 확인
     const nextIndex = getNextQuestionIndex(1);
     if (nextIndex >= surveyQuestions.length) {
-        nextBtn.textContent = '결과 보기';
+        nextBtn.textContent = '결과 보기 ▶';
     } else {
-        nextBtn.textContent = '다음';
+        nextBtn.textContent = '다음 ▶';
     }
 }
 
