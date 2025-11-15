@@ -113,7 +113,7 @@ const surveyQuestions = [
             { value: 'gel', label: '알로에/진정 젤을 바른다', weight: 2 },
             { value: 'mask', label: '시트 마스크/쿨링 패드 사용', weight: 3 },
             { value: 'ice', label: '얼음·찬 물수건 등 즉흥 쿨링', weight: 1 },
-            { value: 'other', label: '기타', weight: 1 }
+            { value: 'other', label: '기타', weight: 1, hasTextInput: true }
         ]
     },
 
@@ -153,7 +153,7 @@ const surveyQuestions = [
             { value: 'sticky', label: '제품들이 끈적이거나 무거워서', weight: 2 },
             { value: 'no_effect', label: '써봤는데 효과를 잘 못 느껴서', weight: 1 },
             { value: 'no_need', label: '필요성을 못 느껴서', weight: 0 },
-            { value: 'other', label: '기타', weight: 0 }
+            { value: 'other', label: '기타', weight: 0, hasTextInput: true }
         ]
     },
 
@@ -207,7 +207,7 @@ const surveyQuestions = [
             { value: 'picnic', label: '피크닉·공원 산책', weight: 2 },
             { value: 'hiking', label: '가벼운 하이킹·러닝', weight: 3 },
             { value: 'indoor', label: '쇼핑 등 실내 활동 위주', weight: 0 },
-            { value: 'other', label: '기타', weight: 1 }
+            { value: 'other', label: '기타', weight: 1, hasTextInput: true }
         ]
     },
 
@@ -397,11 +397,23 @@ function renderQuestion() {
         // 기존 옵션 타입 질문
         question.options.forEach((option, index) => {
             const inputType = question.type === 'multiple' ? 'checkbox' : 'radio';
-            const isChecked = answers[question.id] &&
-                (question.type === 'multiple'
-                    ? answers[question.id].includes(option.value)
-                    : answers[question.id] === option.value ||
-                      (typeof answers[question.id] === 'string' && answers[question.id].startsWith('other:')));
+
+            // 체크 여부 확인
+            let isChecked = false;
+            if (answers[question.id]) {
+                if (question.type === 'multiple') {
+                    // 배열에서 "other" 또는 "other:텍스트" 찾기
+                    isChecked = answers[question.id].includes(option.value) ||
+                                (option.value === 'other' && answers[question.id].some(ans =>
+                                    typeof ans === 'string' && ans.startsWith('other:')
+                                ));
+                } else {
+                    // 단일 선택
+                    isChecked = answers[question.id] === option.value ||
+                                (option.value === 'other' && typeof answers[question.id] === 'string' &&
+                                 answers[question.id].startsWith('other:'));
+                }
+            }
 
             html += `
                 <div class="option ${isChecked ? 'selected' : ''}" onclick="selectOption(event, '${question.id}', '${option.value}', '${question.type}', this, ${option.hasTextInput || false})">
@@ -416,10 +428,29 @@ function renderQuestion() {
 
             // 텍스트 입력이 필요한 옵션인 경우
             if (option.hasTextInput) {
-                const otherText = (typeof answers[question.id] === 'string' && answers[question.id].startsWith('other:'))
-                    ? answers[question.id].replace('other:', '')
-                    : '';
-                const showInput = answers[question.id] === 'other' || (typeof answers[question.id] === 'string' && answers[question.id].startsWith('other:'));
+                let otherText = '';
+                let showInput = false;
+
+                if (question.type === 'multiple' && Array.isArray(answers[question.id])) {
+                    // 배열에서 "other:텍스트" 찾기
+                    const otherAnswer = answers[question.id].find(ans =>
+                        typeof ans === 'string' && ans.startsWith('other:')
+                    );
+                    if (otherAnswer) {
+                        otherText = otherAnswer.replace('other:', '');
+                        showInput = true;
+                    } else if (answers[question.id].includes('other')) {
+                        showInput = true;
+                    }
+                } else if (typeof answers[question.id] === 'string') {
+                    // 단일 선택
+                    if (answers[question.id].startsWith('other:')) {
+                        otherText = answers[question.id].replace('other:', '');
+                        showInput = true;
+                    } else if (answers[question.id] === 'other') {
+                        showInput = true;
+                    }
+                }
 
                 html += `
                     <div id="${question.id}_other_input" style="display: ${showInput ? 'block' : 'none'}; margin: 10px 0 20px 0; padding: 0 20px;">
@@ -469,10 +500,32 @@ function selectOption(event, questionId, value, type, element, hasTextInput = fa
             answers[questionId].splice(index, 1);
             element.classList.remove('selected');
             if (checkbox) checkbox.checked = false;
+
+            // "기타" 체크 해제 시 텍스트 입력 숨김
+            if (hasTextInput && value === 'other') {
+                const otherInput = document.getElementById(`${questionId}_other_input`);
+                if (otherInput) {
+                    otherInput.style.display = 'none';
+                }
+                // "other:텍스트" 형태의 답변도 제거
+                answers[questionId] = answers[questionId].filter(ans =>
+                    typeof ans !== 'string' || !ans.startsWith('other:')
+                );
+            }
         } else {
             answers[questionId].push(value);
             element.classList.add('selected');
             if (checkbox) checkbox.checked = true;
+
+            // "기타" 체크 시 텍스트 입력 표시
+            if (hasTextInput && value === 'other') {
+                const otherInput = document.getElementById(`${questionId}_other_input`);
+                const otherText = document.getElementById(`${questionId}_other_text`);
+                if (otherInput) {
+                    otherInput.style.display = 'block';
+                    if (otherText) otherText.focus();
+                }
+            }
         }
     } else {
         answers[questionId] = value;
@@ -516,11 +569,30 @@ function handleEmailInput(questionId, value) {
 
 // 기타 옵션 텍스트 입력 처리
 function handleOtherInput(questionId, value) {
-    if (value.trim()) {
-        answers[questionId] = 'other:' + value;
+    const currentAnswer = answers[questionId];
+
+    // 배열인 경우 (multiple choice)
+    if (Array.isArray(currentAnswer)) {
+        // 기존 "other" 또는 "other:텍스트" 제거
+        answers[questionId] = currentAnswer.filter(ans =>
+            ans !== 'other' && (typeof ans !== 'string' || !ans.startsWith('other:'))
+        );
+
+        // 새로운 값 추가
+        if (value.trim()) {
+            answers[questionId].push('other:' + value);
+        } else {
+            answers[questionId].push('other');
+        }
     } else {
-        answers[questionId] = 'other';
+        // 단일 선택인 경우
+        if (value.trim()) {
+            answers[questionId] = 'other:' + value;
+        } else {
+            answers[questionId] = 'other';
+        }
     }
+
     updateNavigation();
 }
 
@@ -536,7 +608,10 @@ function updateNavigation() {
     const currentQuestion = getCurrentQuestion();
     let hasAnswer = false;
 
-    if (Array.isArray(answers[currentQuestion.id])) {
+    // 이메일 타입 질문은 선택사항이므로 항상 진행 가능
+    if (currentQuestion.type === 'email' && currentQuestion.optional) {
+        hasAnswer = true;
+    } else if (Array.isArray(answers[currentQuestion.id])) {
         // multiple: 배열이 비어있지 않은지 확인
         hasAnswer = answers[currentQuestion.id].length > 0;
     } else {

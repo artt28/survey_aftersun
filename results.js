@@ -649,7 +649,7 @@ function displayResults(type, score) {
     // 타입 이미지
     const typeImageContainer = document.getElementById('type-image');
     if (typeImageContainer) {
-        typeImageContainer.innerHTML = `<img src="/images/${type}.png" alt="${data.name}" style="width: 100%; max-width: 600px; height: auto; border-radius: 12px;">`;
+        typeImageContainer.innerHTML = `<img src="images/${type}.png" alt="${data.name}" style="width: 100%; max-width: 600px; height: auto; border-radius: 12px;">`;
     }
 
     // 케어 루틴
