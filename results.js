@@ -649,7 +649,11 @@ function displayResults(type, score) {
     // 타입 이미지
     const typeImageContainer = document.getElementById('type-image');
     if (typeImageContainer) {
-        typeImageContainer.innerHTML = `<img src="images/${type}.png" alt="${data.name}" style="width: 100%; max-width: 600px; height: auto; border-radius: 12px;">`;
+        // GitHub Pages 경로 포함
+        const imagePath = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? `images/${type}.png`
+            : `/survey_aftersun/images/${type}.png`;
+        typeImageContainer.innerHTML = `<img src="${imagePath}" alt="${data.name}" style="width: 100%; max-width: 600px; height: auto; border-radius: 12px;">`;
     }
 
     // 케어 루틴
@@ -696,7 +700,7 @@ function updateMetaTags(type, data, score) {
     updateOrCreateMeta('og:title', `나는 "${data.name}"! UV 케어 점수 ${score}점`);
     updateOrCreateMeta('og:description', data.tagline + ' - ' + data.description.substring(0, 100));
     updateOrCreateMeta('og:url', window.location.href);
-    updateOrCreateMeta('og:image', `${window.location.origin}/images/${type}.png`);
+    updateOrCreateMeta('og:image', `https://artt28.github.io/survey_aftersun/images/${type}.png`);
     updateOrCreateMeta('og:type', 'website');
 
     // Twitter Card
