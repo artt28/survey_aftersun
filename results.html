@@ -113,6 +113,63 @@
             gap: 10px;
         }
 
+        /* 아코디언 스타일 */
+        .accordion-section {
+            margin-bottom: 15px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .accordion-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            user-select: none;
+        }
+
+        .accordion-header:hover {
+            background: linear-gradient(135deg, #5568d3 0%, #653a8a 100%);
+        }
+
+        .accordion-header.active {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+
+        .accordion-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .accordion-icon {
+            font-size: 1.2em;
+            transition: transform 0.3s;
+        }
+
+        .accordion-header.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+            background: white;
+        }
+
+        .accordion-content.active {
+            max-height: 3000px;
+            padding: 25px;
+        }
+
         .routine-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -683,57 +740,77 @@
                 </div>
             </div>
 
-            <!-- 케어 루틴 -->
-            <div class="section">
-                <h2 class="section-title">📅 당신을 위한 3단계 케어 루틴</h2>
-                <div class="routine-grid">
-                    <div class="routine-card">
-                        <h4>🌅 STEP 1: 아침 루틴</h4>
-                        <ul id="routine-morning"></ul>
-                    </div>
-                    <div class="routine-card">
-                        <h4>☀️ STEP 2: 낮 관리</h4>
-                        <ul id="routine-daytime"></ul>
-                    </div>
-                    <div class="routine-card">
-                        <h4>🌙 STEP 3: 저녁 루틴</h4>
-                        <ul id="routine-evening"></ul>
+            <!-- 케어 루틴 (아코디언) -->
+            <div class="accordion-section">
+                <div class="accordion-header active" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">📅 당신을 위한 3단계 케어 루틴</div>
+                    <div class="accordion-icon">▼</div>
+                </div>
+                <div class="accordion-content active">
+                    <div class="routine-grid">
+                        <div class="routine-card">
+                            <h4>🌅 STEP 1: 아침 루틴</h4>
+                            <ul id="routine-morning"></ul>
+                        </div>
+                        <div class="routine-card">
+                            <h4>☀️ STEP 2: 낮 관리</h4>
+                            <ul id="routine-daytime"></ul>
+                        </div>
+                        <div class="routine-card">
+                            <h4>🌙 STEP 3: 저녁 루틴</h4>
+                            <ul id="routine-evening"></ul>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 제품 추천 -->
-            <div class="section">
-                <h2 class="section-title">📦 맞춤 제품 추천</h2>
-                <div class="products-section">
-                    <div class="products-category">
-                        <h4>⭐ [1순위] 필수템</h4>
-                        <ul id="products-essential"></ul>
-                    </div>
-                    <div class="products-category">
-                        <h4>✨ [2순위] 선택템</h4>
-                        <ul id="products-optional"></ul>
-                    </div>
-                    <div class="products-category">
-                        <h4>💎 [3순위] 업그레이드</h4>
-                        <ul id="products-advanced"></ul>
+            <!-- 제품 추천 (아코디언) -->
+            <div class="accordion-section">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">📦 맞춤 제품 추천</div>
+                    <div class="accordion-icon">▼</div>
+                </div>
+                <div class="accordion-content">
+                    <div class="products-section">
+                        <div class="products-category">
+                            <h4>⭐ [1순위] 필수템</h4>
+                            <ul id="products-essential"></ul>
+                        </div>
+                        <div class="products-category">
+                            <h4>✨ [2순위] 선택템</h4>
+                            <ul id="products-optional"></ul>
+                        </div>
+                        <div class="products-category">
+                            <h4>💎 [3순위] 업그레이드</h4>
+                            <ul id="products-advanced"></ul>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- UV 상식 바로잡기 -->
-            <div class="section">
-                <h2 class="section-title">💡 UV 상식 바로잡기</h2>
-                <div id="myths-list">
-                    <!-- JavaScript로 동적 생성 -->
+            <!-- UV 상식 바로잡기 (아코디언) -->
+            <div class="accordion-section">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">💡 UV 상식 바로잡기</div>
+                    <div class="accordion-icon">▼</div>
+                </div>
+                <div class="accordion-content">
+                    <div id="myths-list">
+                        <!-- JavaScript로 동적 생성 -->
+                    </div>
                 </div>
             </div>
 
-            <!-- 상황별 팁 -->
-            <div class="section">
-                <h2 class="section-title">🎯 상황별 실전 팁</h2>
-                <div id="tips-list">
-                    <!-- JavaScript로 동적 생성 -->
+            <!-- 상황별 팁 (아코디언) -->
+            <div class="accordion-section">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">🎯 상황별 실전 팁</div>
+                    <div class="accordion-icon">▼</div>
+                </div>
+                <div class="accordion-content">
+                    <div id="tips-list">
+                        <!-- JavaScript로 동적 생성 -->
+                    </div>
                 </div>
             </div>
 
@@ -743,5 +820,21 @@
 
     <script src="config.js"></script>
     <script src="results.js"></script>
+    <script>
+        // 아코디언 토글 함수
+        function toggleAccordion(header) {
+            const content = header.nextElementSibling;
+            const isActive = header.classList.contains('active');
+
+            // 토글
+            if (isActive) {
+                header.classList.remove('active');
+                content.classList.remove('active');
+            } else {
+                header.classList.add('active');
+                content.classList.add('active');
+            }
+        }
+    </script>
 </body>
 </html>

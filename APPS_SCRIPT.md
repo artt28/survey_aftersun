@@ -73,21 +73,21 @@ function doPost(e) {
       formatTimestamp(data.timestamp || new Date().toISOString()),
       translateUVType(data.uvType || ''),
       data.score || '',
-      formatAnswer(data.q1),
-      formatAnswer(data.q2),
-      formatAnswer(data.q3),
-      formatAnswer(data.q4),
-      formatAnswer(data.q5),
-      formatAnswer(data.q6),
-      formatAnswer(data.q7_1),
-      formatAnswer(data.q7_2),
-      formatAnswer(data.q8),
-      formatAnswer(data.q9),  // "other:텍스트" 형식 처리됨
-      formatAnswer(data.q10),
-      formatAnswer(data.q11),
-      formatAnswer(data.q12),
-      formatAnswer(data.q13),
-      formatAnswer(data.q14),
+      formatAnswer(data.q1, 'q1'),
+      formatAnswer(data.q2, 'q2'),
+      formatAnswer(data.q3, 'q3'),
+      formatAnswer(data.q4, 'q4'),
+      formatAnswer(data.q5, 'q5'),
+      formatAnswer(data.q6, 'q6'),
+      formatAnswer(data.q7_1, 'q7_1'),
+      formatAnswer(data.q7_2, 'q7_2'),
+      formatAnswer(data.q8, 'q8'),
+      formatAnswer(data.q9, 'q9'),  // "other:텍스트" 형식 처리됨
+      formatAnswer(data.q10, 'q10'),
+      formatAnswer(data.q11, 'q11'),
+      formatAnswer(data.q12, 'q12'),
+      formatAnswer(data.q13, 'q13'),
+      formatAnswer(data.q14, 'q14'),
       data.q15 || '',  // 이메일 (선택사항)
       data.userAgent || ''
     ];
@@ -153,23 +153,167 @@ function doGet(e) {
 }
 
 /**
- * 답변 포맷팅 (배열이면 콤마로 연결, "other:" 처리)
+ * 답변 코드를 한글 라벨로 변환
  */
-function formatAnswer(answer) {
+function translateAnswer(questionId, answerCode) {
+  // "other:텍스트" 형식 처리
+  if (typeof answerCode === 'string' && answerCode.startsWith('other:')) {
+    return '기타: ' + answerCode.substring(6);
+  }
+
+  // 질문별 코드-한글 매핑
+  const translations = {
+    // Q1: 햇빛 노출 후 피부 증상
+    'q1': {
+      'heat': '얼굴 열감/화끈거림',
+      'redness': '홍조가 오래 유지됨',
+      'oil': '땀·유분 증가',
+      'makeup_break': '메이크업 무너짐',
+      'pores': '모공이 넓어짐',
+      'dryness': '건조함/당김',
+      'lift': '메이크업 들뜸',
+      'none': '거의 변화 없음'
+    },
+    // Q2, Q4: 빈도 관련
+    'q2': {
+      'always': '거의 매번',
+      'often': '주 2–3회',
+      'sometimes': '주 1회',
+      'rarely': '거의 없음'
+    },
+    'q4': {
+      'always': '거의 매번',
+      'often': '주 2–3회',
+      'sometimes': '주 1회',
+      'rarely': '거의 바르지 않는다'
+    },
+    // Q3: 광노화 인지도
+    'q3': {
+      'know_act': '알고 있었고 평소 신경 쓰는 편',
+      'heard': '들어만 봤다',
+      'never': '처음 듣는다'
+    },
+    // Q5: 선크림 덧바르기
+    'q5': {
+      'often': '자주 덧바른다',
+      'sometimes': '가끔 한다',
+      'rarely': '거의 안 한다',
+      'cant': '번거로워서 못 한다'
+    },
+    // Q6: 진정 케어 여부
+    'q6': {
+      'yes': '한다',
+      'no': '안 한다'
+    },
+    // Q7-1: 케어 방식
+    'q7_1': {
+      'wash': '물로 세안한다',
+      'mist': '미스트를 뿌린다',
+      'gel': '알로에/진정 젤을 바른다',
+      'mask': '시트 마스크/쿨링 패드 사용',
+      'ice': '얼음·찬 물수건 등 즉흥 쿨링',
+      'other': '기타'
+    },
+    // Q7-2: 제품 선택 포인트
+    'q7_2': {
+      'cooling': '즉각적인 쿨링·진정',
+      'makeup': '메이크업 위에도 사용 가능',
+      'texture': '끈적임/유분감 없음',
+      'portable': '휴대성',
+      'ingredient': '성분·안정성',
+      'lasting': '지속력',
+      'price': '가격'
+    },
+    // Q8: 안 하는 이유
+    'q8': {
+      'lazy': '귀찮아서',
+      'makeup': '메이크업 위에 바르기 어려워서',
+      'dont_know': '어떤 제품을 써야 할지 몰라서',
+      'sticky': '제품들이 끈적이거나 무거워서',
+      'no_effect': '써봤는데 효과를 잘 못 느껴서',
+      'no_need': '필요성을 못 느껴서',
+      'other': '기타'
+    },
+    // Q9: 평일 자외선 노출
+    'q9': {
+      'under_30': '30분 이하 (출퇴근·점심 이동 정도)',
+      '30_to_60': '30분–1시간',
+      'over_60': '1시간 이상',
+      'none': '거의 없음',
+      'other': '기타'
+    },
+    // Q10: 생활 환경
+    'q10': {
+      'walk': '출퇴근 시 도보 이동이 많다',
+      'drive': '운전을 자주 하거나 운전 시간이 길다',
+      'indoor': '대부분 실내에서 생활한다',
+      'window': '실내지만 창가·유리벽 근처에서 일한다',
+      'cafe': '카페/테라스 활동을 자주 한다',
+      'lunch': '점심시간에 야외 이동이 잦다',
+      'outdoor': '야외 활동이 많은 편이다'
+    },
+    // Q11: 주말 활동
+    'q11': {
+      'terrace': '야외 카페/테라스 방문',
+      'picnic': '피크닉·공원 산책',
+      'hiking': '가벼운 하이킹·러닝',
+      'indoor': '쇼핑 등 실내 활동 위주',
+      'other': '기타'
+    },
+    // Q12: 진정 필요 순간
+    'q12': {
+      'commute': '출근길/퇴근길 후',
+      'lunch': '점심 외출 후',
+      'drive': '운전 후',
+      'cafe': '야외 카페·테라스 이용 후',
+      'exercise': '운동·러닝 후',
+      'makeup': '메이크업이 들뜨거나 붉어졌을 때',
+      'none': '거의 없다'
+    },
+    // Q13: 연령대
+    'q13': {
+      'teens': '10대',
+      'early_20s': '20대 초반',
+      'late_20s': '20대 후반',
+      'early_30s': '30대 초반',
+      'late_30s': '30대 후반',
+      '40plus': '40대 이상'
+    },
+    // Q14: 피부 타입
+    'q14': {
+      'dry': '건성',
+      'oily': '지성',
+      'combination': '복합성',
+      'sensitive': '민감성',
+      'acne': '여드름 피부',
+      'unknown': '잘 모르겠다'
+    }
+  };
+
+  // 질문 ID에 해당하는 번역이 있으면 사용
+  if (translations[questionId] && translations[questionId][answerCode]) {
+    return translations[questionId][answerCode];
+  }
+
+  // 번역이 없으면 원본 반환
+  return answerCode;
+}
+
+/**
+ * 답변 포맷팅 (배열이면 콤마로 연결, "other:" 처리, 한글 번역)
+ */
+function formatAnswer(answer, questionId) {
   if (answer === null || answer === undefined) {
     return '';
   }
+
   if (Array.isArray(answer)) {
-    return answer.join(', ');
+    // 배열의 각 요소를 한글로 번역하고 쉼표로 연결
+    return answer.map(item => translateAnswer(questionId, item)).join(', ');
   }
 
-  // "other:텍스트" 형식 처리
-  const answerStr = answer.toString();
-  if (answerStr.startsWith('other:')) {
-    return '기타: ' + answerStr.substring(6);
-  }
-
-  return answerStr;
+  // 단일 값을 한글로 번역
+  return translateAnswer(questionId, answer.toString());
 }
 
 /**
@@ -340,6 +484,193 @@ function resetSheet() {
   Logger.log('📊 한글 헤더 및 스타일링이 적용되었습니다.');
 
   return '완료! Responses 시트를 확인하세요.';
+}
+
+/**
+ * Statistics 시트 생성 및 초기화
+ */
+function createStatisticsSheet() {
+  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+
+  // 기존 Statistics 시트 삭제
+  let statsSheet = spreadsheet.getSheetByName('Statistics');
+  if (statsSheet) {
+    spreadsheet.deleteSheet(statsSheet);
+  }
+
+  // 새 Statistics 시트 생성
+  statsSheet = spreadsheet.insertSheet('Statistics');
+
+  // 제목 및 설명
+  statsSheet.getRange(1, 1).setValue('📊 UV 케어 설문조사 통계 대시보드');
+  statsSheet.getRange(1, 1).setFontSize(18).setFontWeight('bold');
+  statsSheet.getRange(2, 1).setValue('자동으로 업데이트되는 실시간 통계');
+  statsSheet.getRange(2, 1).setFontSize(11).setFontColor('#666666');
+
+  // 섹션 1: UV 타입 분포 (행 4부터)
+  let currentRow = 4;
+  statsSheet.getRange(currentRow, 1).setValue('1️⃣ UV 타입 분포');
+  statsSheet.getRange(currentRow, 1).setFontSize(14).setFontWeight('bold').setBackground('#E8F0FE');
+  currentRow += 2;
+
+  // UV 타입 헤더
+  statsSheet.getRange(currentRow, 1, 1, 3).setValues([['타입 이름', '응답 수', '비율(%)']]);
+  statsSheet.getRange(currentRow, 1, 1, 3).setFontWeight('bold').setBackground('#4285F4').setFontColor('#FFFFFF');
+  currentRow++;
+
+  // UV 타입 데이터 (9개)
+  const uvTypes = [
+    '🦊 사막여우', '🐼 그늘판다', '🐬 애프터썬 돌고래',
+    '🦢 유리백조', '🦝 밸런스 너구리', '🐆 액션 치타',
+    '🦅 태양독수리', '🐱 도시냥', '🐣 UV 새싹'
+  ];
+
+  uvTypes.forEach((typeName, index) => {
+    const rowNum = currentRow + index;
+    statsSheet.getRange(rowNum, 1).setValue(typeName);
+    // COUNTIF 공식: Responses 시트의 B열에서 타입 이름 카운트
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!B:B,"${typeName}")`);
+    // 비율 공식
+    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!B:B)-1>0,B${rowNum}/(COUNTA(Responses!B:B)-1)*100,0)`);
+    statsSheet.getRange(rowNum, 3).setNumberFormat('0.0"%"');
+  });
+
+  currentRow += uvTypes.length + 2;
+
+  // UV 타입 파이 차트 생성
+  const uvChartRange = statsSheet.getRange(7, 1, 9, 2);
+  const uvChart = statsSheet.newChart()
+    .setChartType(Charts.ChartType.PIE)
+    .addRange(uvChartRange)
+    .setPosition(7, 5, 0, 0)
+    .setOption('title', 'UV 타입 분포')
+    .setOption('width', 500)
+    .setOption('height', 300)
+    .setOption('pieHole', 0.4)
+    .build();
+  statsSheet.insertChart(uvChart);
+
+  // 섹션 2: 연령대별 분포
+  currentRow += 2;
+  statsSheet.getRange(currentRow, 1).setValue('2️⃣ 연령대별 분포');
+  statsSheet.getRange(currentRow, 1).setFontSize(14).setFontWeight('bold').setBackground('#E8F0FE');
+  currentRow += 2;
+
+  statsSheet.getRange(currentRow, 1, 1, 3).setValues([['연령대', '응답 수', '비율(%)']]);
+  statsSheet.getRange(currentRow, 1, 1, 3).setFontWeight('bold').setBackground('#4285F4').setFontColor('#FFFFFF');
+  currentRow++;
+
+  const ageGroups = ['10대', '20대 초반', '20대 후반', '30대 초반', '30대 후반', '40대 이상'];
+  const ageStartRow = currentRow;
+
+  ageGroups.forEach((age, index) => {
+    const rowNum = currentRow + index;
+    statsSheet.getRange(rowNum, 1).setValue(age);
+    // Q13 연령대 데이터 (P열)
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!P:P,"${age}")`);
+    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!P:P)-1>0,B${rowNum}/(COUNTA(Responses!P:P)-1)*100,0)`);
+    statsSheet.getRange(rowNum, 3).setNumberFormat('0.0"%"');
+  });
+
+  currentRow += ageGroups.length + 2;
+
+  // 연령대 막대 차트
+  const ageChartRange = statsSheet.getRange(ageStartRow, 1, ageGroups.length, 2);
+  const ageChart = statsSheet.newChart()
+    .setChartType(Charts.ChartType.COLUMN)
+    .addRange(ageChartRange)
+    .setPosition(ageStartRow, 5, 0, 0)
+    .setOption('title', '연령대별 분포')
+    .setOption('width', 500)
+    .setOption('height', 300)
+    .setOption('legend', {position: 'none'})
+    .build();
+  statsSheet.insertChart(ageChart);
+
+  // 섹션 3: 피부타입별 분포
+  currentRow += 2;
+  statsSheet.getRange(currentRow, 1).setValue('3️⃣ 피부타입별 분포');
+  statsSheet.getRange(currentRow, 1).setFontSize(14).setFontWeight('bold').setBackground('#E8F0FE');
+  currentRow += 2;
+
+  statsSheet.getRange(currentRow, 1, 1, 3).setValues([['피부타입', '응답 수', '비율(%)']]);
+  statsSheet.getRange(currentRow, 1, 1, 3).setFontWeight('bold').setBackground('#4285F4').setFontColor('#FFFFFF');
+  currentRow++;
+
+  const skinTypes = ['건성', '지성', '복합성', '민감성', '여드름 피부', '잘 모르겠다'];
+  const skinStartRow = currentRow;
+
+  skinTypes.forEach((skin, index) => {
+    const rowNum = currentRow + index;
+    statsSheet.getRange(rowNum, 1).setValue(skin);
+    // Q14 피부타입 데이터 (Q열)
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!Q:Q,"${skin}")`);
+    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!Q:Q)-1>0,B${rowNum}/(COUNTA(Responses!Q:Q)-1)*100,0)`);
+    statsSheet.getRange(rowNum, 3).setNumberFormat('0.0"%"');
+  });
+
+  currentRow += skinTypes.length + 2;
+
+  // 피부타입 막대 차트
+  const skinChartRange = statsSheet.getRange(skinStartRow, 1, skinTypes.length, 2);
+  const skinChart = statsSheet.newChart()
+    .setChartType(Charts.ChartType.COLUMN)
+    .addRange(skinChartRange)
+    .setPosition(skinStartRow, 5, 0, 0)
+    .setOption('title', '피부타입별 분포')
+    .setOption('width', 500)
+    .setOption('height', 300)
+    .setOption('legend', {position: 'none'})
+    .build();
+  statsSheet.insertChart(skinChart);
+
+  // 섹션 4: 주요 답변 빈도
+  currentRow += 2;
+  statsSheet.getRange(currentRow, 1).setValue('4️⃣ 주요 답변 빈도 (핵심 질문)');
+  statsSheet.getRange(currentRow, 1).setFontSize(14).setFontWeight('bold').setBackground('#E8F0FE');
+  currentRow += 2;
+
+  // Q2: 증상 빈도
+  statsSheet.getRange(currentRow, 1).setValue('Q2. 증상 발생 빈도');
+  statsSheet.getRange(currentRow, 1).setFontWeight('bold');
+  currentRow++;
+
+  const q2Answers = ['거의 매번', '주 2–3회', '주 1회', '거의 없음'];
+  q2Answers.forEach(answer => {
+    statsSheet.getRange(currentRow, 1).setValue(`- ${answer}`);
+    statsSheet.getRange(currentRow, 2).setFormula(`=COUNTIF(Responses!E:E,"${answer}")`);
+    statsSheet.getRange(currentRow, 3).setFormula(`=IF(COUNTA(Responses!E:E)-1>0,B${currentRow}/(COUNTA(Responses!E:E)-1)*100,0)`);
+    statsSheet.getRange(currentRow, 3).setNumberFormat('0.0"%"');
+    currentRow++;
+  });
+
+  currentRow++;
+
+  // Q6: 진정 케어 여부
+  statsSheet.getRange(currentRow, 1).setValue('Q6. 햇빛 노출 후 진정/쿨링 케어');
+  statsSheet.getRange(currentRow, 1).setFontWeight('bold');
+  currentRow++;
+
+  statsSheet.getRange(currentRow, 1).setValue('- 한다');
+  statsSheet.getRange(currentRow, 2).setFormula('=COUNTIF(Responses!I:I,"한다")');
+  statsSheet.getRange(currentRow, 3).setFormula(`=IF(COUNTA(Responses!I:I)-1>0,B${currentRow}/(COUNTA(Responses!I:I)-1)*100,0)`);
+  statsSheet.getRange(currentRow, 3).setNumberFormat('0.0"%"');
+  currentRow++;
+
+  statsSheet.getRange(currentRow, 1).setValue('- 안 한다');
+  statsSheet.getRange(currentRow, 2).setFormula('=COUNTIF(Responses!I:I,"안 한다")');
+  statsSheet.getRange(currentRow, 3).setFormula(`=IF(COUNTA(Responses!I:I)-1>0,B${currentRow}/(COUNTA(Responses!I:I)-1)*100,0)`);
+  statsSheet.getRange(currentRow, 3).setNumberFormat('0.0"%"');
+
+  // 열 너비 조정
+  statsSheet.setColumnWidth(1, 250);
+  statsSheet.setColumnWidth(2, 100);
+  statsSheet.setColumnWidth(3, 100);
+
+  Logger.log('✅ Statistics 시트가 생성되었습니다.');
+  Logger.log('📊 차트와 통계가 자동으로 업데이트됩니다.');
+
+  return 'Statistics 시트 생성 완료!';
 }
 ```
 

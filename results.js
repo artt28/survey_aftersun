@@ -1,3 +1,12 @@
+// 마크다운을 HTML로 변환하는 간단한 함수
+function parseMarkdown(text) {
+    if (!text) return '';
+    return text
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')  // **bold**
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')              // *italic*
+        .replace(/\n/g, '<br>');                            // 줄바꿈
+}
+
 // UV 케어 타입 데이터 (동물 캐릭터 기반 9개 타입)
 const uvTypes = {
     'desert_fox': {
@@ -643,7 +652,7 @@ function displayResults(type, score) {
     document.getElementById('type-icon').textContent = data.icon;
     document.getElementById('type-name').textContent = data.name;
     document.getElementById('type-tagline').textContent = data.tagline;
-    document.getElementById('type-description').textContent = data.description;
+    document.getElementById('type-description').innerHTML = parseMarkdown(data.description);
     document.getElementById('uv-score').textContent = score;
 
     // 타입 이미지
@@ -677,14 +686,14 @@ function displayResults(type, score) {
     // UV 상식 바로잡기
     document.getElementById('myths-list').innerHTML = data.myths.map(m =>
         `<div class="myth-item">
-            <div class="myth-wrong">❌ ${m.wrong}</div>
-            <div class="myth-right">✅ ${m.right}</div>
+            <div class="myth-wrong">❌ ${parseMarkdown(m.wrong)}</div>
+            <div class="myth-right">✅ ${parseMarkdown(m.right)}</div>
         </div>`
     ).join('');
 
     // 상황별 팁
     const tipsHtml = Object.entries(data.tips).map(([key, value]) =>
-        `<div class="tip-item"><strong>💡 </strong>${value}</div>`
+        `<div class="tip-item"><strong>💡 </strong>${parseMarkdown(value)}</div>`
     ).join('');
     document.getElementById('tips-list').innerHTML = tipsHtml;
 
