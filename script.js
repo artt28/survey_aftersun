@@ -232,9 +232,24 @@ const surveyQuestions = [
 
     // ===== 섹션 4: 응답자 정보 (Basics) =====
 
-    // Q13. 연령대
+    // Q13. 성별
     {
         id: 'q13',
+        section: 'demographics',
+        question: '👤 성별을 선택해주세요',
+        type: 'single',
+        category: 'gender',
+        options: [
+            { value: 'female', label: '여성', weight: 0 },
+            { value: 'male', label: '남성', weight: 0 },
+            { value: 'other', label: '기타', weight: 0 },
+            { value: 'prefer_not', label: '응답 안 함', weight: 0 }
+        ]
+    },
+
+    // Q14. 연령대
+    {
+        id: 'q14',
         section: 'demographics',
         question: '👤 연령대를 선택해주세요',
         type: 'single',
@@ -249,9 +264,9 @@ const surveyQuestions = [
         ]
     },
 
-    // Q14. 피부 타입
+    // Q15. 피부 타입
     {
-        id: 'q14',
+        id: 'q15',
         section: 'demographics',
         question: '✨ 피부 타입을 선택해주세요',
         type: 'single',
@@ -266,9 +281,9 @@ const surveyQuestions = [
         ]
     },
 
-    // Q15. 이메일 (선택사항)
+    // Q16. 이메일 (선택사항)
     {
-        id: 'q15',
+        id: 'q16',
         section: 'contact',
         question: '📧 결과를 이메일로 받고 싶으신가요?',
         description: '선택사항입니다. 나중에 맞춤형 UV 케어 팁을 보내드릴게요!',

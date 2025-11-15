@@ -86,9 +86,10 @@ function doPost(e) {
       formatAnswer(data.q10, 'q10'),
       formatAnswer(data.q11, 'q11'),
       formatAnswer(data.q12, 'q12'),
-      formatAnswer(data.q13, 'q13'),
-      formatAnswer(data.q14, 'q14'),
-      data.q15 || '',  // 이메일 (선택사항)
+      formatAnswer(data.q13, 'q13'),  // 성별
+      formatAnswer(data.q14, 'q14'),  // 연령대
+      formatAnswer(data.q15, 'q15'),  // 피부 타입
+      data.q16 || '',  // 이메일 (선택사항)
       data.userAgent || ''
     ];
 
@@ -270,8 +271,15 @@ function translateAnswer(questionId, answerCode) {
       'makeup': '메이크업이 들뜨거나 붉어졌을 때',
       'none': '거의 없다'
     },
-    // Q13: 연령대
+    // Q13: 성별
     'q13': {
+      'female': '여성',
+      'male': '남성',
+      'other': '기타',
+      'prefer_not': '응답 안 함'
+    },
+    // Q14: 연령대
+    'q14': {
       'teens': '10대',
       'early_20s': '20대 초반',
       'late_20s': '20대 후반',
@@ -279,8 +287,8 @@ function translateAnswer(questionId, answerCode) {
       'late_30s': '30대 후반',
       '40plus': '40대 이상'
     },
-    // Q14: 피부 타입
-    'q14': {
+    // Q15: 피부 타입
+    'q15': {
       'dry': '건성',
       'oily': '지성',
       'combination': '복합성',
@@ -355,8 +363,8 @@ function createStyledSheet(spreadsheet) {
     'Q4. 선크림 사용 빈도', 'Q5. 선크림 덧바르기', 'Q6. 진정 케어 여부',
     'Q7-1. 케어 방식', 'Q7-2. 제품 선택 포인트', 'Q8. 안 하는 이유',
     'Q9. 평일 자외선 노출', 'Q10. 생활 환경', 'Q11. 주말 활동',
-    'Q12. 진정 필요 순간', 'Q13. 연령대', 'Q14. 피부 타입',
-    'Q15. 이메일', 'User Agent'
+    'Q12. 진정 필요 순간', 'Q13. 성별', 'Q14. 연령대', 'Q15. 피부 타입',
+    'Q16. 이메일', 'User Agent'
   ];
 
   sheet.appendRow(headers);
@@ -375,13 +383,13 @@ function createStyledSheet(spreadsheet) {
   sheet.setColumnWidth(2, 150);  // UV 타입
   sheet.setColumnWidth(3, 60);   // 점수
 
-  // Q1-Q14 열 너비
-  for (let i = 4; i <= 18; i++) {
+  // Q1-Q15 열 너비
+  for (let i = 4; i <= 19; i++) {
     sheet.setColumnWidth(i, 180);
   }
 
-  sheet.setColumnWidth(19, 200);  // 이메일
-  sheet.setColumnWidth(20, 250);  // User Agent
+  sheet.setColumnWidth(20, 200);  // 이메일
+  sheet.setColumnWidth(21, 250);  // User Agent
 
   // 행 높이
   sheet.setRowHeight(1, 60);
@@ -449,9 +457,10 @@ function testPost() {
     q10: ['walk', 'cafe'],
     q11: ['terrace', 'picnic'],
     q12: ['commute', 'cafe'],
-    q13: 'late_20s',
-    q14: 'sensitive',
-    q15: 'test@example.com',  // 이메일 (선택사항)
+    q13: 'female',  // 성별
+    q14: 'late_20s',  // 연령대
+    q15: 'sensitive',  // 피부 타입
+    q16: 'test@example.com',  // 이메일 (선택사항)
     userAgent: 'Mozilla/5.0 (Test User Agent)'
   };
 
@@ -981,16 +990,16 @@ function createStatisticsSheet() {
 
   currentRow += q12Options.length + 3;
 
-  // ========== 섹션 15: Q13 - 연령대 ==========
-  statsSheet.getRange(currentRow, 1).setValue('1️⃣5️⃣ Q13. 연령대 분포');
+  // ========== 섹션 15: Q13 - 성별 ==========
+  statsSheet.getRange(currentRow, 1).setValue('1️⃣5️⃣ Q13. 성별 분포');
   statsSheet.getRange(currentRow, 1).setFontSize(14).setFontWeight('bold').setBackground('#E8F0FE');
   currentRow += 2;
 
-  statsSheet.getRange(currentRow, 1, 1, 3).setValues([['연령대', '응답 수', '비율(%)']]);
+  statsSheet.getRange(currentRow, 1, 1, 3).setValues([['성별', '응답 수', '비율(%)']]);
   statsSheet.getRange(currentRow, 1, 1, 3).setFontWeight('bold').setBackground('#4285F4').setFontColor('#FFFFFF');
   currentRow++;
 
-  const q13Options = ['10대', '20대 초반', '20대 후반', '30대 초반', '30대 후반', '40대 이상'];
+  const q13Options = ['여성', '남성', '기타', '응답 안 함'];
   const q13StartRow = currentRow;
 
   q13Options.forEach((option, index) => {
@@ -1002,28 +1011,28 @@ function createStatisticsSheet() {
   });
 
   const q13Chart = statsSheet.newChart()
-    .setChartType(Charts.ChartType.COLUMN)
+    .setChartType(Charts.ChartType.PIE)
     .addRange(statsSheet.getRange(q13StartRow, 1, q13Options.length, 2))
     .setPosition(q13StartRow, chartColumn, 0, 0)
-    .setOption('title', 'Q13. 연령대 분포')
+    .setOption('title', 'Q13. 성별 분포')
     .setOption('width', 450)
-    .setOption('height', 280)
-    .setOption('legend', {position: 'none'})
+    .setOption('height', 250)
+    .setOption('pieHole', 0.4)
     .build();
   statsSheet.insertChart(q13Chart);
 
   currentRow += q13Options.length + 3;
 
-  // ========== 섹션 16: Q14 - 피부타입 ==========
-  statsSheet.getRange(currentRow, 1).setValue('1️⃣6️⃣ Q14. 피부타입 분포');
+  // ========== 섹션 16: Q14 - 연령대 ==========
+  statsSheet.getRange(currentRow, 1).setValue('1️⃣6️⃣ Q14. 연령대 분포');
   statsSheet.getRange(currentRow, 1).setFontSize(14).setFontWeight('bold').setBackground('#E8F0FE');
   currentRow += 2;
 
-  statsSheet.getRange(currentRow, 1, 1, 3).setValues([['피부타입', '응답 수', '비율(%)']]);
+  statsSheet.getRange(currentRow, 1, 1, 3).setValues([['연령대', '응답 수', '비율(%)']]);
   statsSheet.getRange(currentRow, 1, 1, 3).setFontWeight('bold').setBackground('#4285F4').setFontColor('#FFFFFF');
   currentRow++;
 
-  const q14Options = ['건성', '지성', '복합성', '민감성', '여드름 피부', '잘 모르겠다'];
+  const q14Options = ['10대', '20대 초반', '20대 후반', '30대 초반', '30대 후반', '40대 이상'];
   const q14StartRow = currentRow;
 
   q14Options.forEach((option, index) => {
@@ -1035,17 +1044,50 @@ function createStatisticsSheet() {
   });
 
   const q14Chart = statsSheet.newChart()
-    .setChartType(Charts.ChartType.PIE)
+    .setChartType(Charts.ChartType.COLUMN)
     .addRange(statsSheet.getRange(q14StartRow, 1, q14Options.length, 2))
     .setPosition(q14StartRow, chartColumn, 0, 0)
-    .setOption('title', 'Q14. 피부타입 분포')
+    .setOption('title', 'Q14. 연령대 분포')
     .setOption('width', 450)
     .setOption('height', 280)
-    .setOption('pieHole', 0.4)
+    .setOption('legend', {position: 'none'})
     .build();
   statsSheet.insertChart(q14Chart);
 
   currentRow += q14Options.length + 3;
+
+  // ========== 섹션 17: Q15 - 피부타입 ==========
+  statsSheet.getRange(currentRow, 1).setValue('1️⃣7️⃣ Q15. 피부타입 분포');
+  statsSheet.getRange(currentRow, 1).setFontSize(14).setFontWeight('bold').setBackground('#E8F0FE');
+  currentRow += 2;
+
+  statsSheet.getRange(currentRow, 1, 1, 3).setValues([['피부타입', '응답 수', '비율(%)']]);
+  statsSheet.getRange(currentRow, 1, 1, 3).setFontWeight('bold').setBackground('#4285F4').setFontColor('#FFFFFF');
+  currentRow++;
+
+  const q15Options = ['건성', '지성', '복합성', '민감성', '여드름 피부', '잘 모르겠다'];
+  const q15StartRow = currentRow;
+
+  q15Options.forEach((option, index) => {
+    const rowNum = currentRow + index;
+    statsSheet.getRange(rowNum, 1).setValue(option);
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!S:S,"${option}")`);
+    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!S:S)-1>0,B${rowNum}/(COUNTA(Responses!S:S)-1)*100,0)`);
+    statsSheet.getRange(rowNum, 3).setNumberFormat('0.0"%"');
+  });
+
+  const q15Chart = statsSheet.newChart()
+    .setChartType(Charts.ChartType.PIE)
+    .addRange(statsSheet.getRange(q15StartRow, 1, q15Options.length, 2))
+    .setPosition(q15StartRow, chartColumn, 0, 0)
+    .setOption('title', 'Q15. 피부타입 분포')
+    .setOption('width', 450)
+    .setOption('height', 280)
+    .setOption('pieHole', 0.4)
+    .build();
+  statsSheet.insertChart(q15Chart);
+
+  currentRow += q15Options.length + 3;
 
   // 열 너비 조정
   statsSheet.setColumnWidth(1, 280);
@@ -1053,9 +1095,9 @@ function createStatisticsSheet() {
   statsSheet.setColumnWidth(3, 100);
 
   Logger.log('✅ Statistics 시트가 생성되었습니다 (전체 질문 포함).');
-  Logger.log('📊 16개 섹션의 차트와 통계가 자동으로 업데이트됩니다.');
+  Logger.log('📊 17개 섹션의 차트와 통계가 자동으로 업데이트됩니다.');
 
-  return 'Statistics 시트 생성 완료! (Q1-Q14 전체)';
+  return 'Statistics 시트 생성 완료! (Q1-Q15 전체)';
 }
 ```
 
