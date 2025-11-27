@@ -90,6 +90,7 @@ function doPost(e) {
       formatAnswer(data.q14, 'q14'),  // 연령대
       formatAnswer(data.q15, 'q15'),  // 피부 타입
       data.q16 || '',  // 이메일 (선택사항)
+      formatAnswer(data.q17, 'q17'),  // 파인애플 포지셔닝 (보너스)
       data.userAgent || ''
     ];
 
@@ -194,36 +195,33 @@ function translateAnswer(questionId, answerCode) {
       'heard': '들어만 봤다',
       'never': '처음 듣는다'
     },
-    // Q5: 선크림 덧바르기
+    // Q5: 제형/컨셉 선호 (리서치)
     'q5': {
-      'often': '자주 덧바른다',
-      'sometimes': '가끔 한다',
-      'rarely': '거의 안 한다',
-      'cant': '번거로워서 못 한다'
+      'mist_burden_relief': '가벼운 미스트로 선크림 부담 줄이기',
+      'stick_protection': '스틱으로 자외선 차단 덧바르기',
+      'gel_cooling': '쿨링 젤로 열 받은 피부 진정',
+      'nothing': '특별히 안 한다'
     },
     // Q6: 진정 케어 여부
     'q6': {
       'yes': '한다',
       'no': '안 한다'
     },
-    // Q7-1: 케어 방식
+    // Q7-1: 사용 맥락 (리서치)
     'q7_1': {
-      'wash': '물로 세안한다',
-      'mist': '미스트를 뿌린다',
-      'gel': '알로에/진정 젤을 바른다',
-      'mask': '시트 마스크/쿨링 패드 사용',
-      'ice': '얼음·찬 물수건 등 즉흥 쿨링',
-      'other': '기타'
+      'commute': '햇빛 쬔 출퇴근 직후',
+      'lunch': '점심 외출 후 사무실 복귀 시',
+      'makeup_melt': '메이크업이 무너지고 열감이 느껴질 때',
+      'evening': '하루 끝 집에서 저녁 루틴으로',
+      'exercise': '운동·야외활동 직후',
+      'indoor_ac': '실내 에어컨·건조함 느껴질 때'
     },
-    // Q7-2: 제품 선택 포인트
+    // Q7-2: 사이즈/휴대성 (리서치)
     'q7_2': {
-      'cooling': '즉각적인 쿨링·진정',
-      'makeup': '메이크업 위에도 사용 가능',
-      'texture': '끈적임/유분감 없음',
-      'portable': '휴대성',
-      'ingredient': '성분·안정성',
-      'lasting': '지속력',
-      'price': '가격'
+      'mini_50ml': '50ml 미니 사이즈 - 가볍고 휴대 편함 (1주일용)',
+      'standard_100ml': '100ml 표준 사이즈 - 휴대성과 용량 균형 (2주용)',
+      'large_150ml': '150ml+ 대용량 - 가성비 좋고 자주 안 사도 됨 (집에 두기)',
+      'no_carry': '휴대 안 함 - 집에서만 사용'
     },
     // Q8: 안 하는 이유
     'q8': {
@@ -243,33 +241,29 @@ function translateAnswer(questionId, answerCode) {
       'none': '거의 없음',
       'other': '기타'
     },
-    // Q10: 생활 환경
+    // Q10: 포지셔닝 컨셉 (리서치)
     'q10': {
-      'walk': '출퇴근 시 도보 이동이 많다',
-      'drive': '운전을 자주 하거나 운전 시간이 길다',
-      'indoor': '대부분 실내에서 생활한다',
-      'window': '실내지만 창가·유리벽 근처에서 일한다',
-      'cafe': '카페/테라스 활동을 자주 한다',
-      'lunch': '점심시간에 야외 이동이 잦다',
-      'outdoor': '야외 활동이 많은 편이다'
+      'sunscreen_heavy': '선크림이 덧발라질수록 무겁고 끈적여서 피부가 답답함',
+      'protection_fade': '땀으로 자외선 차단이 지워져서 피부가 탈 것 같음',
+      'heat_redness': '열 받아서 얼굴이 빨개지고 화끈거림',
+      'makeup_break': '메이크업이 무너지고 들뜨는 것'
     },
-    // Q11: 주말 활동
+    // Q11: 제형+베네핏 조합 (리서치)
     'q11': {
-      'terrace': '야외 카페/테라스 방문',
-      'picnic': '피크닉·공원 산책',
-      'hiking': '가벼운 하이킹·러닝',
-      'indoor': '쇼핑 등 실내 활동 위주',
-      'other': '기타'
+      'mist_light': '미스트 - 메이크업 위에도 쓱, 선크림 부담 없이 가볍게',
+      'stick_protection': '스틱 - 손 안 더럽히고 빠르게, UV 차단 연장',
+      'gel_cooling': '젤 - 물처럼 시원하게, 열 받은 피부 즉시 진정',
+      'sheet_intensive': '시트팩 - 5분 붙이기, 집중 진정 (휴대 불편해도 OK)'
     },
-    // Q12: 진정 필요 순간
+    // Q12: 노출 맥락 (리서치)
     'q12': {
-      'commute': '출근길/퇴근길 후',
-      'lunch': '점심 외출 후',
-      'drive': '운전 후',
-      'cafe': '야외 카페·테라스 이용 후',
-      'exercise': '운동·러닝 후',
-      'makeup': '메이크업이 들뜨거나 붉어졌을 때',
-      'none': '거의 없다'
+      'commute_walk': '도보 출퇴근 (20분 이상)',
+      'driving': '운전 (30분 이상)',
+      'outdoor_lunch': '점심시간 야외 이동',
+      'exercise': '야외 운동·러닝',
+      'weekend_outdoor': '주말 야외 활동 (카페·공원·등산)',
+      'window_seat': '창가 자리 장시간',
+      'minimal': '거의 없음 (실내 위주)'
     },
     // Q13: 성별
     'q13': {
@@ -295,6 +289,14 @@ function translateAnswer(questionId, answerCode) {
       'sensitive': '민감성',
       'acne': '여드름 피부',
       'unknown': '잘 모르겠다'
+    },
+    // Q17: 파인애플 포지셔닝 (보너스 질문)
+    'q17': {
+      'tropical_cooling': '트로피컬 쿨링 - 상큼하고 시원한 쿨링감',
+      'enzyme_power': '효소 진정 - 빠르고 강력한 진정 효과',
+      'natural_gentle': '자연 유래 - 천연 성분으로 순하게',
+      'exfoliation': '각질케어 겸용 - 진정+각질 2in1',
+      'effect_matters': '성분보다 효과가 중요'
     }
   };
 
@@ -360,11 +362,11 @@ function createStyledSheet(spreadsheet) {
   const headers = [
     '응답 시각', 'UV 케어 타입', '점수',
     'Q1. 햇빛 노출 후 피부 증상', 'Q2. 증상 빈도', 'Q3. 광노화 인지도',
-    'Q4. 선크림 사용 빈도', 'Q5. 선크림 덧바르기', 'Q6. 진정 케어 여부',
-    'Q7-1. 케어 방식', 'Q7-2. 제품 선택 포인트', 'Q8. 안 하는 이유',
-    'Q9. 평일 자외선 노출', 'Q10. 생활 환경', 'Q11. 주말 활동',
-    'Q12. 진정 필요 순간', 'Q13. 성별', 'Q14. 연령대', 'Q15. 피부 타입',
-    'Q16. 이메일', 'User Agent'
+    'Q4. 선크림 사용 빈도', 'Q5. 제형/컨셉 선호', 'Q6. 진정 케어 여부',
+    'Q7-1. 사용 맥락', 'Q7-2. 사이즈/휴대성', 'Q8. 안 하는 이유',
+    'Q9. 평일 자외선 노출', 'Q10. 포지셔닝 컨셉', 'Q11. 제형+베네핏',
+    'Q12. 노출 맥락', 'Q13. 성별', 'Q14. 연령대', 'Q15. 피부 타입',
+    'Q16. 이메일', 'Q17. 파인애플 포지셔닝', 'User Agent'
   ];
 
   sheet.appendRow(headers);
@@ -389,7 +391,8 @@ function createStyledSheet(spreadsheet) {
   }
 
   sheet.setColumnWidth(20, 200);  // 이메일
-  sheet.setColumnWidth(21, 250);  // User Agent
+  sheet.setColumnWidth(21, 200);  // Q17 (파인애플)
+  sheet.setColumnWidth(22, 250);  // User Agent
 
   // 행 높이
   sheet.setRowHeight(1, 60);
@@ -448,19 +451,20 @@ function testPost() {
     q2: 'always',
     q3: 'know_act',
     q4: 'always',
-    q5: 'often',
+    q5: 'mist_burden_relief',  // 변경됨
     q6: 'yes',
-    q7_1: ['wash', 'mist', 'gel'],
-    q7_2: ['cooling', 'makeup'],
+    q7_1: ['commute', 'makeup_melt'],  // 변경됨
+    q7_2: 'standard_100ml',  // 변경됨
     q8: '',  // Q6='yes'이므로 비어있음
     q9: 'other:낮에 운동을 해요',  // 기타 입력 테스트
-    q10: ['walk', 'cafe'],
-    q11: ['terrace', 'picnic'],
-    q12: ['commute', 'cafe'],
+    q10: 'heat_redness',  // 변경됨
+    q11: 'gel_cooling',  // 변경됨
+    q12: ['commute_walk', 'exercise'],  // 변경됨
     q13: 'female',  // 성별
     q14: 'late_20s',  // 연령대
     q15: 'sensitive',  // 피부 타입
     q16: 'test@example.com',  // 이메일 (선택사항)
+    q17: 'enzyme_power',  // 파인애플 포지셔닝 (보너스)
     userAgent: 'Mozilla/5.0 (Test User Agent)'
   };
 

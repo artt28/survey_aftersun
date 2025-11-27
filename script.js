@@ -69,18 +69,18 @@ const surveyQuestions = [
         ]
     },
 
-    // Q5. 선크림 덧바르기
+    // Q5. 제형 & 컨셉 선호 (리서치)
     {
         id: 'q5',
         section: 'behavior',
-        question: '⏰ 외출 중 선크림을 덧바르시나요?',
+        question: '🌞 야외에서 30분 이상 있을 예정이라면, 당신의 선택은?',
         type: 'single',
-        category: 'prevention',
+        category: 'format_preference',
         options: [
-            { value: 'often', label: '자주 덧바른다', weight: 3 },
-            { value: 'sometimes', label: '가끔 한다', weight: 2 },
-            { value: 'rarely', label: '거의 안 한다', weight: 1 },
-            { value: 'cant', label: '번거로워서 못 한다', weight: 0 }
+            { value: 'mist_burden_relief', label: '가벼운 미스트로 선크림 부담 줄이기', weight: 2, research: { format: 'mist', concept: 'burden_relief' } },
+            { value: 'stick_protection', label: '스틱으로 자외선 차단 덧바르기', weight: 3, research: { format: 'stick', concept: 'sun_protection' } },
+            { value: 'gel_cooling', label: '쿨링 젤로 열 받은 피부 진정', weight: 1, research: { format: 'gel', concept: 'cooling' } },
+            { value: 'nothing', label: '특별히 안 한다', weight: 0, research: { format: 'none', concept: 'none' } }
         ]
     },
 
@@ -98,42 +98,38 @@ const surveyQuestions = [
         branching: true  // 분기 질문 표시
     },
 
-    // Q7-1. 케어 방식 (Q6="yes"일 때만)
+    // Q7-1. 사용 맥락 - 언제 (리서치)
     {
         id: 'q7_1',
         section: 'behavior',
-        question: '🛁 어떤 방식으로 케어하시나요?',
-        description: '해당되는 모든 것을 선택해주세요',
+        question: '💧 어떤 순간에 피부 진정이 가장 필요하다고 느끼시나요?',
+        description: '해당되는 모든 순간을 선택해주세요',
         type: 'multiple',
-        category: 'aftercare_method',
+        category: 'usage_context',
         condition: { questionId: 'q6', value: 'yes' },
         options: [
-            { value: 'wash', label: '물로 세안한다', weight: 1 },
-            { value: 'mist', label: '미스트를 뿌린다', weight: 2 },
-            { value: 'gel', label: '알로에/진정 젤을 바른다', weight: 2 },
-            { value: 'mask', label: '시트 마스크/쿨링 패드 사용', weight: 3 },
-            { value: 'ice', label: '얼음·찬 물수건 등 즉흥 쿨링', weight: 1 },
-            { value: 'other', label: '기타', weight: 1, hasTextInput: true }
+            { value: 'commute', label: '햇빛 쬔 출퇴근 직후', weight: 2, research: 'outdoor_commute' },
+            { value: 'lunch', label: '점심 외출 후 사무실 복귀 시', weight: 2, research: 'midday_return' },
+            { value: 'makeup_melt', label: '메이크업이 무너지고 열감이 느껴질 때', weight: 3, research: 'over_makeup' },
+            { value: 'evening', label: '하루 끝 집에서 저녁 루틴으로', weight: 1, research: 'evening_routine' },
+            { value: 'exercise', label: '운동·야외활동 직후', weight: 3, research: 'post_exercise' },
+            { value: 'indoor_ac', label: '실내 에어컨·건조함 느껴질 때', weight: 1, research: 'indoor_dryness' }
         ]
     },
 
-    // Q7-2. 제품 선택 포인트 (Q6="yes"일 때만)
+    // Q7-2. 사이즈/휴대성 (리서치)
     {
         id: 'q7_2',
         section: 'behavior',
-        question: '⭐ 이런 제품을 선택할 때 가장 중요한 포인트는 뭐라고 생각하시나요?',
-        description: '해당되는 모든 것을 선택해주세요',
-        type: 'multiple',
-        category: 'product_priority',
+        question: '🎒 가방에 넣어 다닐 진정 제품을 고른다면?',
+        type: 'single',
+        category: 'size_portability',
         condition: { questionId: 'q6', value: 'yes' },
         options: [
-            { value: 'cooling', label: '즉각적인 쿨링·진정', weight: 3 },
-            { value: 'makeup', label: '메이크업 위에도 사용 가능', weight: 2 },
-            { value: 'texture', label: '끈적임/유분감 없음', weight: 2 },
-            { value: 'portable', label: '휴대성', weight: 1 },
-            { value: 'ingredient', label: '성분·안정성', weight: 2 },
-            { value: 'lasting', label: '지속력', weight: 2 },
-            { value: 'price', label: '가격', weight: 1 }
+            { value: 'mini_50ml', label: '50ml 미니 사이즈 - 가볍고 휴대 편함 (1주일용)', weight: 2, research: { size: '50ml', priority: 'portability' } },
+            { value: 'standard_100ml', label: '100ml 표준 사이즈 - 휴대성과 용량 균형 (2주용)', weight: 2, research: { size: '100ml', priority: 'balance' } },
+            { value: 'large_150ml', label: '150ml+ 대용량 - 가성비 좋고 자주 안 사도 됨 (집에 두기)', weight: 1, research: { size: '150ml+', priority: 'value' } },
+            { value: 'no_carry', label: '휴대 안 함 - 집에서만 사용', weight: 0, research: { size: 'home_only', priority: 'home_only' } }
         ]
     },
 
@@ -175,58 +171,54 @@ const surveyQuestions = [
         ]
     },
 
-    // Q10. 생활 환경
+    // Q10. 포지셔닝 컨셉 테스트 (리서치)
     {
         id: 'q10',
         section: 'occasion',
-        question: '🏢 평소 어떤 환경에서 생활하시나요?',
-        description: '해당되는 모든 것을 선택해주세요',
-        type: 'multiple',
-        category: 'environment',
+        question: '☀️ 한여름 야외 일정이 생겼을 때, 가장 걱정되는 것은?',
+        description: '가장 걱정되는 것 하나만 선택해주세요',
+        type: 'single',
+        category: 'positioning_concept',
         options: [
-            { value: 'walk', label: '출퇴근 시 도보 이동이 많다', weight: 2 },
-            { value: 'drive', label: '운전을 자주 하거나 운전 시간이 길다', weight: 2 },
-            { value: 'indoor', label: '대부분 실내에서 생활한다 (사무직, 재택근무 등)', weight: 0 },
-            { value: 'window', label: '실내지만 창가·유리벽 근처에서 일한다', weight: 1 },
-            { value: 'cafe', label: '카페/테라스 활동을 자주 한다', weight: 2 },
-            { value: 'lunch', label: '점심시간에 야외 이동이 잦다', weight: 1 },
-            { value: 'outdoor', label: '야외 활동이 많은 편이다 (현장직, 체육 등)', weight: 3 }
+            { value: 'sunscreen_heavy', label: '선크림이 덧발라질수록 무겁고 끈적여서 피부가 답답함', weight: 2, research: { concept: 'burden_relief', pain_point: 'heaviness' } },
+            { value: 'protection_fade', label: '땀으로 자외선 차단이 지워져서 피부가 탈 것 같음', weight: 3, research: { concept: 'sun_protection', pain_point: 'fade' } },
+            { value: 'heat_redness', label: '열 받아서 얼굴이 빨개지고 화끈거림', weight: 3, research: { concept: 'cooling', pain_point: 'heat' } },
+            { value: 'makeup_break', label: '메이크업이 무너지고 들뜨는 것', weight: 2, research: { concept: 'makeup_fix', pain_point: 'makeup' } }
         ]
     },
 
-    // Q11. 주말 활동
+    // Q11. 제형 + 베네핏 조합 (리서치)
     {
         id: 'q11',
         section: 'occasion',
-        question: '🌴 주말이나 휴일은 보통 어떻게 보내시나요?',
-        description: '해당되는 모든 것을 선택해주세요',
-        type: 'multiple',
-        category: 'weekend',
+        question: '🌴 햇빛 많이 쬔 날, 외출 중 바로 쓸 수 있다면?',
+        description: '하나만 선택해주세요',
+        type: 'single',
+        category: 'format_concept_combo',
         options: [
-            { value: 'terrace', label: '야외 카페/테라스 방문', weight: 2 },
-            { value: 'picnic', label: '피크닉·공원 산책', weight: 2 },
-            { value: 'hiking', label: '가벼운 하이킹·러닝', weight: 3 },
-            { value: 'indoor', label: '쇼핑 등 실내 활동 위주', weight: 0 },
-            { value: 'other', label: '기타', weight: 1, hasTextInput: true }
+            { value: 'mist_light', label: '미스트 - 메이크업 위에도 쓱, 선크림 부담 없이 가볍게', weight: 2, research: { format: 'mist', benefit: 'lightweight_over_makeup' } },
+            { value: 'stick_protection', label: '스틱 - 손 안 더럽히고 빠르게, UV 차단 연장', weight: 3, research: { format: 'stick', benefit: 'quick_sun_protection' } },
+            { value: 'gel_cooling', label: '젤 - 물처럼 시원하게, 열 받은 피부 즉시 진정', weight: 2, research: { format: 'gel', benefit: 'immediate_cooling' } },
+            { value: 'sheet_intensive', label: '시트팩 - 5분 붙이기, 집중 진정 (휴대 불편해도 OK)', weight: 1, research: { format: 'sheet', benefit: 'intensive_home' } }
         ]
     },
 
-    // Q12. 진정 필요 순간
+    // Q12. 노출 맥락 - 어디서 (리서치)
     {
         id: 'q12',
         section: 'occasion',
-        question: '🔥 햇빛 노출 후 \"아, 피부 진정이 필요하다\"라고 느끼는 순간은 언제인가요?',
-        description: '해당되는 모든 것을 선택해주세요',
+        question: '📍 평소 어떤 상황에서 UV 노출이 많은가요?',
+        description: '해당되는 모든 상황을 선택해주세요',
         type: 'multiple',
-        category: 'need_moment',
+        category: 'exposure_context',
         options: [
-            { value: 'commute', label: '출근길/퇴근길 후', weight: 2 },
-            { value: 'lunch', label: '점심 외출 후', weight: 2 },
-            { value: 'drive', label: '운전 후', weight: 2 },
-            { value: 'cafe', label: '야외 카페·테라스 이용 후', weight: 2 },
-            { value: 'exercise', label: '운동·러닝 후', weight: 3 },
-            { value: 'makeup', label: '메이크업이 들뜨거나 붉어졌을 때', weight: 3 },
-            { value: 'none', label: '거의 없다', weight: 0 }
+            { value: 'commute_walk', label: '도보 출퇴근 (20분 이상)', weight: 2, research: 'daily_commute' },
+            { value: 'driving', label: '운전 (30분 이상)', weight: 2, research: 'driving' },
+            { value: 'outdoor_lunch', label: '점심시간 야외 이동', weight: 2, research: 'midday_outdoor' },
+            { value: 'exercise', label: '야외 운동·러닝', weight: 3, research: 'exercise' },
+            { value: 'weekend_outdoor', label: '주말 야외 활동 (카페·공원·등산)', weight: 2, research: 'leisure' },
+            { value: 'window_seat', label: '창가 자리 장시간', weight: 1, research: 'indoor_window' },
+            { value: 'minimal', label: '거의 없음 (실내 위주)', weight: 0, research: 'indoor_primary' }
         ]
     },
 
@@ -291,6 +283,24 @@ const surveyQuestions = [
         category: 'email',
         optional: true,
         placeholder: 'example@email.com'
+    },
+
+    // Q17. 파인애플 포지셔닝 테스트 (보너스 질문, 선택사항)
+    {
+        id: 'q17',
+        section: 'bonus',
+        question: '🍍 만약 \'파인애플 효소\' 함유 애프터썬 제품이 나온다면?',
+        description: '🎁 마지막 질문 하나만 더! (결과에 영향 없음, 제품 개발 참고용)<br>당신이 가장 끌리는 컨셉 하나만 선택해주세요',
+        type: 'single',
+        category: 'pineapple_positioning',
+        optional: true,
+        options: [
+            { value: 'tropical_cooling', label: '트로피컬 쿨링 - 상큼하고 시원한 쿨링감', weight: 0, research: 'sensory_fresh' },
+            { value: 'enzyme_power', label: '효소 진정 - 빠르고 강력한 진정 효과', weight: 0, research: 'functional_powerful' },
+            { value: 'natural_gentle', label: '자연 유래 - 천연 성분으로 순하게', weight: 0, research: 'natural_gentle' },
+            { value: 'exfoliation', label: '각질케어 겸용 - 진정+각질 2in1', weight: 0, research: 'multi_benefit_exfoliation' },
+            { value: 'effect_matters', label: '성분보다 효과가 중요', weight: 0, research: 'ingredient_agnostic' }
+        ]
     }
 ];
 
@@ -384,9 +394,18 @@ function renderQuestion() {
     document.getElementById('current-question').textContent = currentQuestionIndex + 1;
     document.getElementById('total-questions').textContent = totalQuestions;
 
+    // 인라인 정보 카드 가져오기
+    const infoCard = typeof getInfoCard === 'function' ? getInfoCard(question.id) : null;
+
     // 질문 HTML 생성
     let html = `
         <div class="question-card">
+            ${infoCard ? `
+                <div class="info-card ${infoCard.type}">
+                    <span class="info-icon">${infoCard.icon}</span>
+                    <p class="info-text">${infoCard.text}</p>
+                </div>
+            ` : ''}
             <span class="question-number">질문 ${currentQuestionIndex + 1}</span>
             <h2>${question.question}</h2>
             ${question.description ? `<p class="question-description">${question.description}</p>` : ''}
@@ -729,8 +748,9 @@ function calculateUVType() {
         const answer = answers[question.id];
         if (!answer) return;
 
-        // demographics는 제외
-        if (question.category === 'age' || question.category === 'skin_type') return;
+        // demographics 및 research-only 질문은 제외
+        const excludedCategories = ['age', 'skin_type', 'gender', 'email', 'pineapple_positioning'];
+        if (excludedCategories.includes(question.category)) return;
 
         if (question.type === 'multiple') {
             // 복수 선택의 경우
@@ -740,11 +760,12 @@ function calculateUVType() {
                     if (question.category === 'sensitivity') scores.sensitivity += option.weight;
                     else if (question.category === 'knowledge') scores.knowledge += option.weight;
                     else if (question.category === 'prevention') scores.prevention += option.weight;
-                    else if (question.category === 'aftercare_method' || question.category === 'product_priority') {
+                    else if (question.category === 'usage_context') {
+                        // Q7-1: 사용 맥락은 애프터케어 점수에 반영
                         scores.aftercare += option.weight;
                     }
-                    else if (question.category === 'exposure' || question.category === 'environment' ||
-                             question.category === 'weekend' || question.category === 'need_moment') {
+                    else if (question.category === 'exposure_context') {
+                        // Q12: 노출 맥락은 노출도 점수에 반영
                         scores.exposure += option.weight;
                     }
                     else if (question.category === 'barrier') scores.barrier += option.weight;
@@ -759,6 +780,15 @@ function calculateUVType() {
                 else if (question.category === 'prevention') scores.prevention += option.weight;
                 else if (question.category === 'aftercare') scores.aftercare += option.weight;
                 else if (question.category === 'exposure') scores.exposure += option.weight;
+                else if (question.category === 'format_preference' || question.category === 'positioning_concept' || question.category === 'format_concept_combo') {
+                    // Q5, Q10, Q11: 리서치 질문이지만 타입 계산에도 참여
+                    // 사용자의 케어 성향을 간접적으로 반영
+                    scores.prevention += option.weight;
+                }
+                else if (question.category === 'size_portability') {
+                    // Q7-2: 사이즈 선호는 애프터케어 점수에 반영
+                    scores.aftercare += option.weight;
+                }
             }
         }
     });
