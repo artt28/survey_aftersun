@@ -642,8 +642,8 @@ function updateNavigation() {
     const currentQuestion = getCurrentQuestion();
     let hasAnswer = false;
 
-    // 이메일 타입 질문은 선택사항이므로 항상 진행 가능
-    if (currentQuestion.type === 'email' && currentQuestion.optional) {
+    // 선택사항 질문은 항상 진행 가능 (이메일, 보너스 질문 등)
+    if (currentQuestion.optional) {
         hasAnswer = true;
     } else if (Array.isArray(answers[currentQuestion.id])) {
         // multiple: 배열이 비어있지 않은지 확인
