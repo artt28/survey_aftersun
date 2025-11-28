@@ -77,7 +77,7 @@ function doPost(e) {
       formatAnswer(data.q2, 'q2'),
       formatAnswer(data.q3, 'q3'),
       formatAnswer(data.q4, 'q4'),
-      formatAnswer(data.q5, 'q5'),
+      // Q5 removed (duplicate with Q11)
       formatAnswer(data.q6, 'q6'),
       formatAnswer(data.q7_1, 'q7_1'),
       formatAnswer(data.q7_2, 'q7_2'),
@@ -195,13 +195,7 @@ function translateAnswer(questionId, answerCode) {
       'heard': '들어만 봤다',
       'never': '처음 듣는다'
     },
-    // Q5: 제형/컨셉 선호 (리서치)
-    'q5': {
-      'mist_burden_relief': '가벼운 미스트로 선크림 부담 줄이기',
-      'stick_protection': '스틱으로 자외선 차단 덧바르기',
-      'gel_cooling': '쿨링 젤로 열 받은 피부 진정',
-      'nothing': '특별히 안 한다'
-    },
+    // Q5: removed (duplicate with Q11)
     // Q6: 진정 케어 여부
     'q6': {
       'yes': '한다',
@@ -295,8 +289,8 @@ function translateAnswer(questionId, answerCode) {
       'tropical_cooling': '트로피컬 쿨링 - 상큼하고 시원한 쿨링감',
       'enzyme_power': '효소 진정 - 빠르고 강력한 진정 효과',
       'natural_gentle': '자연 유래 - 천연 성분으로 순하게',
-      'exfoliation': '각질케어 겸용 - 진정+각질 2in1',
-      'effect_matters': '성분보다 효과가 중요'
+      'exfoliation': '들뜬 메이크업 없이 매끈한 피부결 효과',
+      'effect_matters': '자외선 손상 회복 - 피부 손상의 골든타임 잡기'
     }
   };
 
@@ -358,11 +352,11 @@ function translateUVType(typeCode) {
 function createStyledSheet(spreadsheet) {
   const sheet = spreadsheet.insertSheet('Responses');
 
-  // 한글 헤더
+  // 한글 헤더 (21 columns - Q5 removed)
   const headers = [
     '응답 시각', 'UV 케어 타입', '점수',
     'Q1. 햇빛 노출 후 피부 증상', 'Q2. 증상 빈도', 'Q3. 광노화 인지도',
-    'Q4. 선크림 사용 빈도', 'Q5. 제형/컨셉 선호', 'Q6. 진정 케어 여부',
+    'Q4. 선크림 사용 빈도', 'Q6. 진정 케어 여부',
     'Q7-1. 사용 맥락', 'Q7-2. 사이즈/휴대성', 'Q8. 안 하는 이유',
     'Q9. 평일 자외선 노출', 'Q10. 포지셔닝 컨셉', 'Q11. 제형+베네핏',
     'Q12. 노출 맥락', 'Q13. 성별', 'Q14. 연령대', 'Q15. 피부 타입',
@@ -385,14 +379,14 @@ function createStyledSheet(spreadsheet) {
   sheet.setColumnWidth(2, 150);  // UV 타입
   sheet.setColumnWidth(3, 60);   // 점수
 
-  // Q1-Q15 열 너비
-  for (let i = 4; i <= 19; i++) {
+  // Q1-Q15 열 너비 (Q5 removed, so 4-18)
+  for (let i = 4; i <= 18; i++) {
     sheet.setColumnWidth(i, 180);
   }
 
-  sheet.setColumnWidth(20, 200);  // 이메일
-  sheet.setColumnWidth(21, 200);  // Q17 (파인애플)
-  sheet.setColumnWidth(22, 250);  // User Agent
+  sheet.setColumnWidth(19, 200);  // 이메일
+  sheet.setColumnWidth(20, 200);  // Q17 (파인애플)
+  sheet.setColumnWidth(21, 250);  // User Agent
 
   // 행 높이
   sheet.setRowHeight(1, 60);
@@ -451,7 +445,7 @@ function testPost() {
     q2: 'always',
     q3: 'know_act',
     q4: 'always',
-    q5: 'mist_burden_relief',  // 변경됨
+    // q5 removed (duplicate with q11)
     q6: 'yes',
     q7_1: ['commute', 'makeup_melt'],  // 변경됨
     q7_2: 'standard_100ml',  // 변경됨
@@ -692,40 +686,10 @@ function createStatisticsSheet() {
 
   currentRow += q4Options.length + 3;
 
-  // ========== 섹션 6: Q5 - 선크림 덧바르기 ==========
-  statsSheet.getRange(currentRow, 1).setValue('6️⃣ Q5. 선크림 덧바르기 습관');
-  statsSheet.getRange(currentRow, 1).setFontSize(14).setFontWeight('bold').setBackground('#E8F0FE');
-  currentRow += 2;
+  // Q5 REMOVED (duplicate with Q11)
 
-  statsSheet.getRange(currentRow, 1, 1, 3).setValues([['습관', '응답 수', '비율(%)']]);
-  statsSheet.getRange(currentRow, 1, 1, 3).setFontWeight('bold').setBackground('#4285F4').setFontColor('#FFFFFF');
-  currentRow++;
-
-  const q5Options = ['자주 덧바른다', '가끔 한다', '거의 안 한다', '번거로워서 못 한다'];
-  const q5StartRow = currentRow;
-
-  q5Options.forEach((option, index) => {
-    const rowNum = currentRow + index;
-    statsSheet.getRange(rowNum, 1).setValue(option);
-    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!H:H,"${option}")`);
-    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!H:H)-1>0,B${rowNum}/(COUNTA(Responses!H:H)-1)*100,0)`);
-    statsSheet.getRange(rowNum, 3).setNumberFormat('0.0"%"');
-  });
-
-  const q5Chart = statsSheet.newChart()
-    .setChartType(Charts.ChartType.PIE)
-    .addRange(statsSheet.getRange(q5StartRow, 1, q5Options.length, 2))
-    .setPosition(q5StartRow, chartColumn, 0, 0)
-    .setOption('title', 'Q5. 선크림 덧바르기')
-    .setOption('width', 450)
-    .setOption('height', 250)
-    .build();
-  statsSheet.insertChart(q5Chart);
-
-  currentRow += q5Options.length + 3;
-
-  // ========== 섹션 7: Q6 - 진정 케어 여부 ==========
-  statsSheet.getRange(currentRow, 1).setValue('7️⃣ Q6. 햇빛 노출 후 진정/쿨링 케어');
+  // ========== 섹션 6: Q6 - 진정 케어 여부 ==========
+  statsSheet.getRange(currentRow, 1).setValue('6️⃣ Q6. 햇빛 노출 후 진정/쿨링 케어');
   statsSheet.getRange(currentRow, 1).setFontSize(14).setFontWeight('bold').setBackground('#E8F0FE');
   currentRow += 2;
 
@@ -739,8 +703,8 @@ function createStatisticsSheet() {
   q6Options.forEach((option, index) => {
     const rowNum = currentRow + index;
     statsSheet.getRange(rowNum, 1).setValue(option);
-    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!I:I,"${option}")`);
-    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!I:I)-1>0,B${rowNum}/(COUNTA(Responses!I:I)-1)*100,0)`);
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!H:H,"${option}")`);
+    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!H:H)-1>0,B${rowNum}/(COUNTA(Responses!H:H)-1)*100,0)`);
     statsSheet.getRange(rowNum, 3).setNumberFormat('0.0"%"');
   });
 
@@ -757,76 +721,83 @@ function createStatisticsSheet() {
 
   currentRow += q6Options.length + 3;
 
-  // ========== 섹션 8: Q7-1 - 케어 방식 (복수선택, Q6='한다' 응답자) ==========
-  statsSheet.getRange(currentRow, 1).setValue('8️⃣ Q7-1. 케어 방식 (복수선택 가능)');
+  // ========== 섹션 7: Q7-1 - 사용 맥락 (복수선택, Q6='한다' 응답자) ==========
+  statsSheet.getRange(currentRow, 1).setValue('7️⃣ Q7-1. 피부 진정 필요 순간 (복수선택)');
   statsSheet.getRange(currentRow, 1).setFontSize(14).setFontWeight('bold').setBackground('#E8F0FE');
   currentRow += 2;
 
-  statsSheet.getRange(currentRow, 1, 1, 2).setValues([['케어 방식', '응답 수']]);
+  statsSheet.getRange(currentRow, 1, 1, 2).setValues([['사용 맥락', '응답 수']]);
   statsSheet.getRange(currentRow, 1, 1, 2).setFontWeight('bold').setBackground('#4285F4').setFontColor('#FFFFFF');
   currentRow++;
 
   const q7_1Options = [
-    '물로 세안한다', '미스트를 뿌린다', '알로에/진정 젤을 바른다',
-    '시트 마스크/쿨링 패드 사용', '얼음·찬 물수건 등 즉흥 쿨링'
+    '햇빛 쬔 출퇴근 직후',
+    '점심 외출 후 사무실 복귀 시',
+    '메이크업이 무너지고 열감이 느껴질 때',
+    '하루 끝 집에서 저녁 루틴으로',
+    '운동·야외활동 직후',
+    '실내 에어컨·건조함 느껴질 때'
   ];
 
   const q7_1StartRow = currentRow;
   q7_1Options.forEach((option, index) => {
     const rowNum = currentRow + index;
     statsSheet.getRange(rowNum, 1).setValue(option);
-    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!J:J,"*${option}*")`);
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!I:I,"*${option}*")`);
   });
 
   const q7_1Chart = statsSheet.newChart()
     .setChartType(Charts.ChartType.BAR)
     .addRange(statsSheet.getRange(q7_1StartRow, 1, q7_1Options.length, 2))
     .setPosition(q7_1StartRow, chartColumn, 0, 0)
-    .setOption('title', 'Q7-1. 케어 방식')
+    .setOption('title', 'Q7-1. 사용 맥락')
     .setOption('width', 450)
-    .setOption('height', 250)
+    .setOption('height', 280)
     .setOption('legend', {position: 'none'})
     .build();
   statsSheet.insertChart(q7_1Chart);
 
   currentRow += q7_1Options.length + 3;
 
-  // ========== 섹션 9: Q7-2 - 제품 선택 포인트 (복수선택) ==========
-  statsSheet.getRange(currentRow, 1).setValue('9️⃣ Q7-2. 제품 선택 시 중요 포인트 (복수선택)');
+  // ========== 섹션 8: Q7-2 - 사이즈/휴대성 선호 ==========
+  statsSheet.getRange(currentRow, 1).setValue('8️⃣ Q7-2. 선호 사이즈/휴대성');
   statsSheet.getRange(currentRow, 1).setFontSize(14).setFontWeight('bold').setBackground('#E8F0FE');
   currentRow += 2;
 
-  statsSheet.getRange(currentRow, 1, 1, 2).setValues([['선택 포인트', '응답 수']]);
-  statsSheet.getRange(currentRow, 1, 1, 2).setFontWeight('bold').setBackground('#4285F4').setFontColor('#FFFFFF');
+  statsSheet.getRange(currentRow, 1, 1, 3).setValues([['사이즈 선호', '응답 수', '비율(%)']]);
+  statsSheet.getRange(currentRow, 1, 1, 3).setFontWeight('bold').setBackground('#4285F4').setFontColor('#FFFFFF');
   currentRow++;
 
   const q7_2Options = [
-    '즉각적인 쿨링·진정', '메이크업 위에도 사용 가능', '끈적임/유분감 없음',
-    '휴대성', '성분·안정성', '지속력', '가격'
+    '50ml 미니 사이즈 - 가볍고 휴대 편함 (1주일용)',
+    '100ml 표준 사이즈 - 휴대성과 용량 균형 (2주용)',
+    '150ml+ 대용량 - 가성비 좋고 자주 안 사도 됨 (집에 두기)',
+    '휴대 안 함 - 집에서만 사용'
   ];
 
   const q7_2StartRow = currentRow;
   q7_2Options.forEach((option, index) => {
     const rowNum = currentRow + index;
     statsSheet.getRange(rowNum, 1).setValue(option);
-    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!K:K,"*${option}*")`);
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!J:J,"${option}")`);
+    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!J:J)-1>0,B${rowNum}/(COUNTA(Responses!J:J)-1)*100,0)`);
+    statsSheet.getRange(rowNum, 3).setNumberFormat('0.0"%"');
   });
 
   const q7_2Chart = statsSheet.newChart()
-    .setChartType(Charts.ChartType.BAR)
+    .setChartType(Charts.ChartType.PIE)
     .addRange(statsSheet.getRange(q7_2StartRow, 1, q7_2Options.length, 2))
     .setPosition(q7_2StartRow, chartColumn, 0, 0)
-    .setOption('title', 'Q7-2. 제품 선택 포인트')
+    .setOption('title', 'Q7-2. 사이즈/휴대성')
     .setOption('width', 450)
-    .setOption('height', 280)
-    .setOption('legend', {position: 'none'})
+    .setOption('height', 250)
     .build();
   statsSheet.insertChart(q7_2Chart);
 
   currentRow += q7_2Options.length + 3;
 
-  // ========== 섹션 10: Q8 - 안 하는 이유 (Q6='안 한다' 응답자) ==========
-  statsSheet.getRange(currentRow, 1).setValue('🔟 Q8. 진정 케어를 안 하는 이유');
+  // ========== 섹션 9: Q8 - 안 하는 이유 (Q6='안 한다' 응답자) ==========
+  statsSheet.getRange(currentRow, 1).setValue('9️⃣ Q8. 진정 케어를 안 하는 이유');
   statsSheet.getRange(currentRow, 1).setFontSize(14).setFontWeight('bold').setBackground('#E8F0FE');
   currentRow += 2;
 
@@ -843,7 +814,7 @@ function createStatisticsSheet() {
   q8Options.forEach((option, index) => {
     const rowNum = currentRow + index;
     statsSheet.getRange(rowNum, 1).setValue(option);
-    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!L:L,"*${option}*")`);
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!K:K,"*${option}*")`);
   });
 
   const q8Chart = statsSheet.newChart()
@@ -859,8 +830,8 @@ function createStatisticsSheet() {
 
   currentRow += q8Options.length + 3;
 
-  // ========== 섹션 11: Q9 - 평일 자외선 노출 시간 ==========
-  statsSheet.getRange(currentRow, 1).setValue('1️⃣1️⃣ Q9. 평일 자외선 노출 시간');
+  // ========== 섹션 10: Q9 - 평일 자외선 노출 시간 ==========
+  statsSheet.getRange(currentRow, 1).setValue('🔟 Q9. 평일 자외선 노출 시간');
   statsSheet.getRange(currentRow, 1).setFontSize(14).setFontWeight('bold').setBackground('#E8F0FE');
   currentRow += 2;
 
@@ -874,8 +845,8 @@ function createStatisticsSheet() {
   q9Options.forEach((option, index) => {
     const rowNum = currentRow + index;
     statsSheet.getRange(rowNum, 1).setValue(option);
-    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!M:M,"${option}")`);
-    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!M:M)-1>0,B${rowNum}/(COUNTA(Responses!M:M)-1)*100,0)`);
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!L:L,"${option}")`);
+    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!L:L)-1>0,B${rowNum}/(COUNTA(Responses!L:L)-1)*100,0)`);
     statsSheet.getRange(rowNum, 3).setNumberFormat('0.0"%"');
   });
 
@@ -891,101 +862,111 @@ function createStatisticsSheet() {
 
   currentRow += q9Options.length + 3;
 
-  // ========== 섹션 12: Q10 - 생활 환경 (복수선택) ==========
-  statsSheet.getRange(currentRow, 1).setValue('1️⃣2️⃣ Q10. 생활 환경 (복수선택 가능)');
+  // ========== 섹션 11: Q10 - 포지셔닝 컨셉 (리서치) ==========
+  statsSheet.getRange(currentRow, 1).setValue('1️⃣1️⃣ Q10. 야외 활동 후 가장 신경 쓰이는 점');
   statsSheet.getRange(currentRow, 1).setFontSize(14).setFontWeight('bold').setBackground('#E8F0FE');
   currentRow += 2;
 
-  statsSheet.getRange(currentRow, 1, 1, 2).setValues([['환경', '응답 수']]);
-  statsSheet.getRange(currentRow, 1, 1, 2).setFontWeight('bold').setBackground('#4285F4').setFontColor('#FFFFFF');
+  statsSheet.getRange(currentRow, 1, 1, 3).setValues([['포지셔닝 컨셉', '응답 수', '비율(%)']]);
+  statsSheet.getRange(currentRow, 1, 1, 3).setFontWeight('bold').setBackground('#4285F4').setFontColor('#FFFFFF');
   currentRow++;
 
   const q10Options = [
-    '출퇴근 시 도보 이동이 많다', '운전을 자주 하거나 운전 시간이 길다',
-    '대부분 실내에서 생활한다', '실내지만 창가·유리벽 근처에서 일한다',
-    '카페/테라스 활동을 자주 한다', '점심시간에 야외 이동이 잦다',
-    '야외 활동이 많은 편이다'
+    '선크림이 덧발라질수록 무겁고 끈적여서 피부가 답답함',
+    '땀으로 자외선 차단이 지워져서 피부가 탈 것 같음',
+    '열 받아서 얼굴이 빨개지고 화끈거림',
+    '메이크업이 무너지고 들뜨는 것'
   ];
 
   const q10StartRow = currentRow;
   q10Options.forEach((option, index) => {
     const rowNum = currentRow + index;
     statsSheet.getRange(rowNum, 1).setValue(option);
-    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!N:N,"*${option}*")`);
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!M:M,"${option}")`);
+    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!M:M)-1>0,B${rowNum}/(COUNTA(Responses!M:M)-1)*100,0)`);
+    statsSheet.getRange(rowNum, 3).setNumberFormat('0.0"%"');
   });
 
   const q10Chart = statsSheet.newChart()
-    .setChartType(Charts.ChartType.BAR)
+    .setChartType(Charts.ChartType.PIE)
     .addRange(statsSheet.getRange(q10StartRow, 1, q10Options.length, 2))
     .setPosition(q10StartRow, chartColumn, 0, 0)
-    .setOption('title', 'Q10. 생활 환경')
+    .setOption('title', 'Q10. 포지셔닝 컨셉')
     .setOption('width', 450)
-    .setOption('height', 280)
-    .setOption('legend', {position: 'none'})
+    .setOption('height', 250)
     .build();
   statsSheet.insertChart(q10Chart);
 
   currentRow += q10Options.length + 3;
 
-  // ========== 섹션 13: Q11 - 주말 활동 (복수선택) ==========
-  statsSheet.getRange(currentRow, 1).setValue('1️⃣3️⃣ Q11. 주말 주요 활동 (복수선택)');
+  // ========== 섹션 12: Q11 - 제형+베네핏 선호 (리서치) ==========
+  statsSheet.getRange(currentRow, 1).setValue('1️⃣2️⃣ Q11. 선호 제형+베네핏');
   statsSheet.getRange(currentRow, 1).setFontSize(14).setFontWeight('bold').setBackground('#E8F0FE');
   currentRow += 2;
 
-  statsSheet.getRange(currentRow, 1, 1, 2).setValues([['활동', '응답 수']]);
-  statsSheet.getRange(currentRow, 1, 1, 2).setFontWeight('bold').setBackground('#4285F4').setFontColor('#FFFFFF');
+  statsSheet.getRange(currentRow, 1, 1, 3).setValues([['제형+베네핏', '응답 수', '비율(%)']]);
+  statsSheet.getRange(currentRow, 1, 1, 3).setFontWeight('bold').setBackground('#4285F4').setFontColor('#FFFFFF');
   currentRow++;
 
   const q11Options = [
-    '야외 카페/테라스 방문', '피크닉·공원 산책', '가벼운 하이킹·러닝', '쇼핑 등 실내 활동 위주'
+    '미스트 - 메이크업 위에도 쓱, 선크림 부담 없이 가볍게',
+    '스틱 - 손 안 더럽히고 빠르게, UV 차단 연장',
+    '젤 - 물처럼 시원하게, 열 받은 피부 즉시 진정',
+    '시트팩 - 5분 붙이기, 집중 진정 (휴대 불편해도 OK)'
   ];
 
   const q11StartRow = currentRow;
   q11Options.forEach((option, index) => {
     const rowNum = currentRow + index;
     statsSheet.getRange(rowNum, 1).setValue(option);
-    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!O:O,"*${option}*")`);
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!N:N,"${option}")`);
+    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!N:N)-1>0,B${rowNum}/(COUNTA(Responses!N:N)-1)*100,0)`);
+    statsSheet.getRange(rowNum, 3).setNumberFormat('0.0"%"');
   });
 
   const q11Chart = statsSheet.newChart()
-    .setChartType(Charts.ChartType.BAR)
+    .setChartType(Charts.ChartType.PIE)
     .addRange(statsSheet.getRange(q11StartRow, 1, q11Options.length, 2))
     .setPosition(q11StartRow, chartColumn, 0, 0)
-    .setOption('title', 'Q11. 주말 활동')
+    .setOption('title', 'Q11. 제형+베네핏')
     .setOption('width', 450)
-    .setOption('height', 220)
-    .setOption('legend', {position: 'none'})
+    .setOption('height', 250)
     .build();
   statsSheet.insertChart(q11Chart);
 
   currentRow += q11Options.length + 3;
 
-  // ========== 섹션 14: Q12 - 진정 필요 순간 (복수선택) ==========
-  statsSheet.getRange(currentRow, 1).setValue('1️⃣4️⃣ Q12. 진정 케어가 필요한 순간 (복수선택)');
+  // ========== 섹션 13: Q12 - 노출 맥락 (복수선택, 리서치) ==========
+  statsSheet.getRange(currentRow, 1).setValue('1️⃣3️⃣ Q12. 평일 자외선 노출 상황 (복수선택)');
   statsSheet.getRange(currentRow, 1).setFontSize(14).setFontWeight('bold').setBackground('#E8F0FE');
   currentRow += 2;
 
-  statsSheet.getRange(currentRow, 1, 1, 2).setValues([['순간', '응답 수']]);
+  statsSheet.getRange(currentRow, 1, 1, 2).setValues([['노출 맥락', '응답 수']]);
   statsSheet.getRange(currentRow, 1, 1, 2).setFontWeight('bold').setBackground('#4285F4').setFontColor('#FFFFFF');
   currentRow++;
 
   const q12Options = [
-    '출근길/퇴근길 후', '점심 외출 후', '운전 후', '야외 카페·테라스 이용 후',
-    '운동·러닝 후', '메이크업이 들뜨거나 붉어졌을 때', '거의 없다'
+    '도보 출퇴근 (20분 이상)',
+    '운전 (30분 이상)',
+    '점심시간 야외 이동',
+    '야외 운동·러닝',
+    '주말 야외 활동 (카페·공원·등산)',
+    '창가 자리 장시간',
+    '거의 없음 (실내 위주)'
   ];
 
   const q12StartRow = currentRow;
   q12Options.forEach((option, index) => {
     const rowNum = currentRow + index;
     statsSheet.getRange(rowNum, 1).setValue(option);
-    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!P:P,"*${option}*")`);
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!O:O,"*${option}*")`);
   });
 
   const q12Chart = statsSheet.newChart()
     .setChartType(Charts.ChartType.BAR)
     .addRange(statsSheet.getRange(q12StartRow, 1, q12Options.length, 2))
     .setPosition(q12StartRow, chartColumn, 0, 0)
-    .setOption('title', 'Q12. 진정 필요 순간')
+    .setOption('title', 'Q12. 노출 맥락')
     .setOption('width', 450)
     .setOption('height', 280)
     .setOption('legend', {position: 'none'})
@@ -994,8 +975,8 @@ function createStatisticsSheet() {
 
   currentRow += q12Options.length + 3;
 
-  // ========== 섹션 15: Q13 - 성별 ==========
-  statsSheet.getRange(currentRow, 1).setValue('1️⃣5️⃣ Q13. 성별 분포');
+  // ========== 섹션 14: Q13 - 성별 ==========
+  statsSheet.getRange(currentRow, 1).setValue('1️⃣4️⃣ Q13. 성별 분포');
   statsSheet.getRange(currentRow, 1).setFontSize(14).setFontWeight('bold').setBackground('#E8F0FE');
   currentRow += 2;
 
@@ -1009,8 +990,8 @@ function createStatisticsSheet() {
   q13Options.forEach((option, index) => {
     const rowNum = currentRow + index;
     statsSheet.getRange(rowNum, 1).setValue(option);
-    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!Q:Q,"${option}")`);
-    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!Q:Q)-1>0,B${rowNum}/(COUNTA(Responses!Q:Q)-1)*100,0)`);
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!P:P,"${option}")`);
+    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!P:P)-1>0,B${rowNum}/(COUNTA(Responses!P:P)-1)*100,0)`);
     statsSheet.getRange(rowNum, 3).setNumberFormat('0.0"%"');
   });
 
@@ -1027,8 +1008,8 @@ function createStatisticsSheet() {
 
   currentRow += q13Options.length + 3;
 
-  // ========== 섹션 16: Q14 - 연령대 ==========
-  statsSheet.getRange(currentRow, 1).setValue('1️⃣6️⃣ Q14. 연령대 분포');
+  // ========== 섹션 15: Q14 - 연령대 ==========
+  statsSheet.getRange(currentRow, 1).setValue('1️⃣5️⃣ Q14. 연령대 분포');
   statsSheet.getRange(currentRow, 1).setFontSize(14).setFontWeight('bold').setBackground('#E8F0FE');
   currentRow += 2;
 
@@ -1042,8 +1023,8 @@ function createStatisticsSheet() {
   q14Options.forEach((option, index) => {
     const rowNum = currentRow + index;
     statsSheet.getRange(rowNum, 1).setValue(option);
-    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!R:R,"${option}")`);
-    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!R:R)-1>0,B${rowNum}/(COUNTA(Responses!R:R)-1)*100,0)`);
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!Q:Q,"${option}")`);
+    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!Q:Q)-1>0,B${rowNum}/(COUNTA(Responses!Q:Q)-1)*100,0)`);
     statsSheet.getRange(rowNum, 3).setNumberFormat('0.0"%"');
   });
 
@@ -1060,8 +1041,8 @@ function createStatisticsSheet() {
 
   currentRow += q14Options.length + 3;
 
-  // ========== 섹션 17: Q15 - 피부타입 ==========
-  statsSheet.getRange(currentRow, 1).setValue('1️⃣7️⃣ Q15. 피부타입 분포');
+  // ========== 섹션 16: Q15 - 피부타입 ==========
+  statsSheet.getRange(currentRow, 1).setValue('1️⃣6️⃣ Q15. 피부타입 분포');
   statsSheet.getRange(currentRow, 1).setFontSize(14).setFontWeight('bold').setBackground('#E8F0FE');
   currentRow += 2;
 
@@ -1075,8 +1056,8 @@ function createStatisticsSheet() {
   q15Options.forEach((option, index) => {
     const rowNum = currentRow + index;
     statsSheet.getRange(rowNum, 1).setValue(option);
-    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!S:S,"${option}")`);
-    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!S:S)-1>0,B${rowNum}/(COUNTA(Responses!S:S)-1)*100,0)`);
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!R:R,"${option}")`);
+    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!R:R)-1>0,B${rowNum}/(COUNTA(Responses!R:R)-1)*100,0)`);
     statsSheet.getRange(rowNum, 3).setNumberFormat('0.0"%"');
   });
 
@@ -1093,15 +1074,54 @@ function createStatisticsSheet() {
 
   currentRow += q15Options.length + 3;
 
+  // ========== 섹션 17: Q17 - 파인애플 포지셔닝 (보너스, 리서치) ==========
+  statsSheet.getRange(currentRow, 1).setValue('1️⃣7️⃣ Q17. 파인애플 효소 포지셔닝 (보너스)');
+  statsSheet.getRange(currentRow, 1).setFontSize(14).setFontWeight('bold').setBackground('#FEF3E8');
+  currentRow += 2;
+
+  statsSheet.getRange(currentRow, 1, 1, 3).setValues([['포지셔닝 컨셉', '응답 수', '비율(%)']]);
+  statsSheet.getRange(currentRow, 1, 1, 3).setFontWeight('bold').setBackground('#F57C00').setFontColor('#FFFFFF');
+  currentRow++;
+
+  const q17Options = [
+    '트로피컬 쿨링 - 상큼하고 시원한 쿨링감',
+    '효소 진정 - 빠르고 강력한 진정 효과',
+    '자연 유래 - 천연 성분으로 순하게',
+    '들뜬 메이크업 없이 매끈한 피부결 효과',
+    '자외선 손상 회복 - 피부 손상의 골든타임 잡기'
+  ];
+  const q17StartRow = currentRow;
+
+  q17Options.forEach((option, index) => {
+    const rowNum = currentRow + index;
+    statsSheet.getRange(rowNum, 1).setValue(option);
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!T:T,"${option}")`);
+    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!T:T)-1>0,B${rowNum}/(COUNTA(Responses!T:T)-1)*100,0)`);
+    statsSheet.getRange(rowNum, 3).setNumberFormat('0.0"%"');
+  });
+
+  const q17Chart = statsSheet.newChart()
+    .setChartType(Charts.ChartType.PIE)
+    .addRange(statsSheet.getRange(q17StartRow, 1, q17Options.length, 2))
+    .setPosition(q17StartRow, chartColumn, 0, 0)
+    .setOption('title', 'Q17. 파인애플 포지셔닝')
+    .setOption('width', 450)
+    .setOption('height', 280)
+    .setOption('pieHole', 0.4)
+    .build();
+  statsSheet.insertChart(q17Chart);
+
+  currentRow += q17Options.length + 3;
+
   // 열 너비 조정
-  statsSheet.setColumnWidth(1, 280);
+  statsSheet.setColumnWidth(1, 320);
   statsSheet.setColumnWidth(2, 100);
   statsSheet.setColumnWidth(3, 100);
 
   Logger.log('✅ Statistics 시트가 생성되었습니다 (전체 질문 포함).');
   Logger.log('📊 17개 섹션의 차트와 통계가 자동으로 업데이트됩니다.');
 
-  return 'Statistics 시트 생성 완료! (Q1-Q15 전체)';
+  return 'Statistics 시트 생성 완료! (Q1-Q17 전체, Q5 제외)';
 }
 ```
 

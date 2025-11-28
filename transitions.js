@@ -23,14 +23,9 @@ const questionInfoCards = {
         text: 'UV-A는 유리창을 50% 통과합니다. 실내도 안전하지 않아요!'
     },
 
-    // Q5: After prevention
-    'q5': {
-        type: 'validation',
-        icon: '🤔',
-        text: '82%가 선크림을 재도포하지 않아요. 혼자가 아니에요!'
-    },
+    // Q5: REMOVED (duplicate with Q11)
 
-    // Q6: After format preference
+    // Q6: After prevention
     'q6': {
         type: 'fact',
         icon: '⏰',

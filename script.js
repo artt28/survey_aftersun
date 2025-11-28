@@ -69,22 +69,8 @@ const surveyQuestions = [
         ]
     },
 
-    // Q5. 제형 & 컨셉 선호 (리서치)
-    {
-        id: 'q5',
-        section: 'behavior',
-        question: '🌞 야외에서 30분 이상 있을 예정이라면, 당신의 선택은?',
-        type: 'single',
-        category: 'format_preference',
-        options: [
-            { value: 'mist_burden_relief', label: '가벼운 미스트로 선크림 부담 줄이기', weight: 2, research: { format: 'mist', concept: 'burden_relief' } },
-            { value: 'stick_protection', label: '스틱으로 자외선 차단 덧바르기', weight: 3, research: { format: 'stick', concept: 'sun_protection' } },
-            { value: 'gel_cooling', label: '쿨링 젤로 열 받은 피부 진정', weight: 1, research: { format: 'gel', concept: 'cooling' } },
-            { value: 'nothing', label: '특별히 안 한다', weight: 0, research: { format: 'none', concept: 'none' } }
-        ]
-    },
-
     // Q6. 진정 케어 여부 (분기점)
+    // NOTE: Q5 removed (duplicate with Q11)
     {
         id: 'q6',
         section: 'behavior',
@@ -191,7 +177,7 @@ const surveyQuestions = [
     {
         id: 'q11',
         section: 'occasion',
-        question: '🌴 햇빛 많이 쬔 날, 외출 중 바로 쓸 수 있다면?',
+        question: '🌴 선크림을 바르고도 햇빛 많이 쬔 날, 외출 중 바로 쓸 수 있다면?',
         description: '하나만 선택해주세요',
         type: 'single',
         category: 'format_concept_combo',
@@ -298,8 +284,8 @@ const surveyQuestions = [
             { value: 'tropical_cooling', label: '트로피컬 쿨링 - 상큼하고 시원한 쿨링감', weight: 0, research: 'sensory_fresh' },
             { value: 'enzyme_power', label: '효소 진정 - 빠르고 강력한 진정 효과', weight: 0, research: 'functional_powerful' },
             { value: 'natural_gentle', label: '자연 유래 - 천연 성분으로 순하게', weight: 0, research: 'natural_gentle' },
-            { value: 'exfoliation', label: '각질케어 겸용 - 진정+각질 2in1', weight: 0, research: 'multi_benefit_exfoliation' },
-            { value: 'effect_matters', label: '성분보다 효과가 중요', weight: 0, research: 'ingredient_agnostic' }
+            { value: 'exfoliation', label: '들뜬 메이크업 없이 매끈한 피부결 효과', weight: 0, research: 'smooth_skin_texture' },
+            { value: 'effect_matters', label: '자외선 손상 회복 - 피부 손상의 골든타임 잡기', weight: 0, research: 'uv_damage_recovery' }
         ]
     }
 ];
