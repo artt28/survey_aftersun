@@ -703,8 +703,8 @@ function createStatisticsSheet() {
   q6Options.forEach((option, index) => {
     const rowNum = currentRow + index;
     statsSheet.getRange(rowNum, 1).setValue(option);
-    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!H:H,"${option}")`);
-    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!H:H)-1>0,B${rowNum}/(COUNTA(Responses!H:H)-1)*100,0)`);
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!I:I,"${option}")`);
+    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!I:I)-1>0,B${rowNum}/(COUNTA(Responses!I:I)-1)*100,0)`);
     statsSheet.getRange(rowNum, 3).setNumberFormat('0.0"%"');
   });
 
@@ -743,7 +743,7 @@ function createStatisticsSheet() {
   q7_1Options.forEach((option, index) => {
     const rowNum = currentRow + index;
     statsSheet.getRange(rowNum, 1).setValue(option);
-    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!I:I,"*${option}*")`);
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!J:J,"*${option}*")`);
   });
 
   const q7_1Chart = statsSheet.newChart()
@@ -779,8 +779,8 @@ function createStatisticsSheet() {
   q7_2Options.forEach((option, index) => {
     const rowNum = currentRow + index;
     statsSheet.getRange(rowNum, 1).setValue(option);
-    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!J:J,"${option}")`);
-    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!J:J)-1>0,B${rowNum}/(COUNTA(Responses!J:J)-1)*100,0)`);
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!K:K,"${option}")`);
+    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!K:K)-1>0,B${rowNum}/(COUNTA(Responses!K:K)-1)*100,0)`);
     statsSheet.getRange(rowNum, 3).setNumberFormat('0.0"%"');
   });
 
@@ -814,7 +814,7 @@ function createStatisticsSheet() {
   q8Options.forEach((option, index) => {
     const rowNum = currentRow + index;
     statsSheet.getRange(rowNum, 1).setValue(option);
-    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!K:K,"*${option}*")`);
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!L:L,"*${option}*")`);
   });
 
   const q8Chart = statsSheet.newChart()
@@ -845,8 +845,8 @@ function createStatisticsSheet() {
   q9Options.forEach((option, index) => {
     const rowNum = currentRow + index;
     statsSheet.getRange(rowNum, 1).setValue(option);
-    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!L:L,"${option}")`);
-    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!L:L)-1>0,B${rowNum}/(COUNTA(Responses!L:L)-1)*100,0)`);
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!M:M,"${option}")`);
+    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!M:M)-1>0,B${rowNum}/(COUNTA(Responses!M:M)-1)*100,0)`);
     statsSheet.getRange(rowNum, 3).setNumberFormat('0.0"%"');
   });
 
@@ -872,18 +872,18 @@ function createStatisticsSheet() {
   currentRow++;
 
   const q10Options = [
-    '선크림이 덧발라질수록 무겁고 끈적여서 피부가 답답함',
-    '땀으로 자외선 차단이 지워져서 피부가 탈 것 같음',
-    '열 받아서 얼굴이 빨개지고 화끈거림',
-    '메이크업이 무너지고 들뜨는 것'
+    { raw: 'sunscreen_heavy', label: '선크림 무거움/답답함' },
+    { raw: 'protection_fade', label: '차단 효과 지워짐' },
+    { raw: 'heat_redness', label: '열감/홍조' },
+    { raw: 'makeup_break', label: '메이크업 무너짐' }
   ];
 
   const q10StartRow = currentRow;
   q10Options.forEach((option, index) => {
     const rowNum = currentRow + index;
-    statsSheet.getRange(rowNum, 1).setValue(option);
-    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!M:M,"${option}")`);
-    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!M:M)-1>0,B${rowNum}/(COUNTA(Responses!M:M)-1)*100,0)`);
+    statsSheet.getRange(rowNum, 1).setValue(option.label);
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!N:N,"*${option.raw}*")`);
+    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!N:N)-1>0,B${rowNum}/(COUNTA(Responses!N:N)-1)*100,0)`);
     statsSheet.getRange(rowNum, 3).setNumberFormat('0.0"%"');
   });
 
@@ -909,18 +909,18 @@ function createStatisticsSheet() {
   currentRow++;
 
   const q11Options = [
-    '미스트 - 메이크업 위에도 쓱, 선크림 부담 없이 가볍게',
-    '스틱 - 손 안 더럽히고 빠르게, UV 차단 연장',
-    '젤 - 물처럼 시원하게, 열 받은 피부 즉시 진정',
-    '시트팩 - 5분 붙이기, 집중 진정 (휴대 불편해도 OK)'
+    { raw: 'mist_light', label: '미스트' },
+    { raw: 'stick_protection', label: '스틱' },
+    { raw: 'gel_cooling', label: '젤' },
+    { raw: 'sheet_intensive', label: '시트팩' }
   ];
 
   const q11StartRow = currentRow;
   q11Options.forEach((option, index) => {
     const rowNum = currentRow + index;
-    statsSheet.getRange(rowNum, 1).setValue(option);
-    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!N:N,"${option}")`);
-    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!N:N)-1>0,B${rowNum}/(COUNTA(Responses!N:N)-1)*100,0)`);
+    statsSheet.getRange(rowNum, 1).setValue(option.label);
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!O:O,"*${option.raw}*")`);
+    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!O:O)-1>0,B${rowNum}/(COUNTA(Responses!O:O)-1)*100,0)`);
     statsSheet.getRange(rowNum, 3).setNumberFormat('0.0"%"');
   });
 
@@ -946,20 +946,21 @@ function createStatisticsSheet() {
   currentRow++;
 
   const q12Options = [
-    '도보 출퇴근 (20분 이상)',
-    '운전 (30분 이상)',
-    '점심시간 야외 이동',
-    '야외 운동·러닝',
-    '주말 야외 활동 (카페·공원·등산)',
-    '창가 자리 장시간',
-    '거의 없음 (실내 위주)'
+    { raw: 'commute_walk', label: '도보 출퇴근' },
+    { raw: 'driving', label: '운전' },
+    { raw: 'outdoor_lunch', label: '점심 야외' },
+    { raw: 'exercise', label: '야외 운동' },
+    { raw: '운동·러닝 후', label: '운동·러닝 후' },
+    { raw: 'weekend_outdoor', label: '주말 야외' },
+    { raw: 'window_seat', label: '창가 자리' },
+    { raw: 'minimal', label: '거의 없음' }
   ];
 
   const q12StartRow = currentRow;
   q12Options.forEach((option, index) => {
     const rowNum = currentRow + index;
-    statsSheet.getRange(rowNum, 1).setValue(option);
-    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!O:O,"*${option}*")`);
+    statsSheet.getRange(rowNum, 1).setValue(option.label);
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!P:P,"*${option.raw}*")`);
   });
 
   const q12Chart = statsSheet.newChart()
@@ -990,8 +991,8 @@ function createStatisticsSheet() {
   q13Options.forEach((option, index) => {
     const rowNum = currentRow + index;
     statsSheet.getRange(rowNum, 1).setValue(option);
-    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!P:P,"${option}")`);
-    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!P:P)-1>0,B${rowNum}/(COUNTA(Responses!P:P)-1)*100,0)`);
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!Q:Q,"${option}")`);
+    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!Q:Q)-1>0,B${rowNum}/(COUNTA(Responses!Q:Q)-1)*100,0)`);
     statsSheet.getRange(rowNum, 3).setNumberFormat('0.0"%"');
   });
 
@@ -1023,8 +1024,8 @@ function createStatisticsSheet() {
   q14Options.forEach((option, index) => {
     const rowNum = currentRow + index;
     statsSheet.getRange(rowNum, 1).setValue(option);
-    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!Q:Q,"${option}")`);
-    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!Q:Q)-1>0,B${rowNum}/(COUNTA(Responses!Q:Q)-1)*100,0)`);
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!R:R,"${option}")`);
+    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!R:R)-1>0,B${rowNum}/(COUNTA(Responses!R:R)-1)*100,0)`);
     statsSheet.getRange(rowNum, 3).setNumberFormat('0.0"%"');
   });
 
@@ -1056,8 +1057,8 @@ function createStatisticsSheet() {
   q15Options.forEach((option, index) => {
     const rowNum = currentRow + index;
     statsSheet.getRange(rowNum, 1).setValue(option);
-    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!R:R,"${option}")`);
-    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!R:R)-1>0,B${rowNum}/(COUNTA(Responses!R:R)-1)*100,0)`);
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!S:S,"${option}")`);
+    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!S:S)-1>0,B${rowNum}/(COUNTA(Responses!S:S)-1)*100,0)`);
     statsSheet.getRange(rowNum, 3).setNumberFormat('0.0"%"');
   });
 
@@ -1084,19 +1085,19 @@ function createStatisticsSheet() {
   currentRow++;
 
   const q17Options = [
-    '트로피컬 쿨링 - 상큼하고 시원한 쿨링감',
-    '효소 진정 - 빠르고 강력한 진정 효과',
-    '자연 유래 - 천연 성분으로 순하게',
-    '들뜬 메이크업 없이 매끈한 피부결 효과',
-    '자외선 손상 회복 - 피부 손상의 골든타임 잡기'
+    { raw: 'tropical_cooling', label: '트로피컬 쿨링' },
+    { raw: 'enzyme_power', label: '효소 진정' },
+    { raw: 'natural_gentle', label: '자연 유래' },
+    { raw: 'exfoliation', label: '매끈한 피부결' },
+    { raw: 'effect_matters', label: '자외선 손상 회복' }
   ];
   const q17StartRow = currentRow;
 
   q17Options.forEach((option, index) => {
     const rowNum = currentRow + index;
-    statsSheet.getRange(rowNum, 1).setValue(option);
-    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!T:T,"${option}")`);
-    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!T:T)-1>0,B${rowNum}/(COUNTA(Responses!T:T)-1)*100,0)`);
+    statsSheet.getRange(rowNum, 1).setValue(option.label);
+    statsSheet.getRange(rowNum, 2).setFormula(`=COUNTIF(Responses!U:U,"*${option.raw}*")`);
+    statsSheet.getRange(rowNum, 3).setFormula(`=IF(COUNTA(Responses!U:U)-1>0,B${rowNum}/(COUNTA(Responses!U:U)-1)*100,0)`);
     statsSheet.getRange(rowNum, 3).setNumberFormat('0.0"%"');
   });
 
